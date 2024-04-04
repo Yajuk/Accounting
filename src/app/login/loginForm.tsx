@@ -1,6 +1,6 @@
 "use client";
-import { TextField, Button, FormControl, FormHelperText } from "@mui/material";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { Button } from "@mui/material";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -35,7 +35,7 @@ const LoginForm = () => {
     restFormState,
   });
   return (
-    <div className="rounded-xl p-8 w-[50%] bg-white shadow-md">
+    <div className="rounded-xl p-8 w-[50%] bg-white shadow-xl">
       <h1 className="text-3xl text-center font-bold mb-6 underline">Login</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormTextField name={"email"} control={control} label={"Email"} />
@@ -50,7 +50,10 @@ const LoginForm = () => {
           variant="contained"
           type="submit"
           color="primary"
-          className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          sx={{
+            mt: 2,
+          }}
+          className="text-white py-6 px-4 my-4 rounded"
         >
           Login
         </Button>

@@ -1,13 +1,7 @@
 "use client";
 
 import { Controller, FieldValues } from "react-hook-form";
-import {
-  TextField,
-  FormControl,
-  FormHelperText,
-  InputBaseComponentProps,
-} from "@mui/material";
-import { z } from "zod";
+import { TextField, FormControl, InputBaseComponentProps } from "@mui/material";
 
 interface FormFieldProps<T> {
   name: keyof T;
@@ -23,7 +17,6 @@ const FormField = <T extends FieldValues>({
   control,
   label,
   type = "text",
-  helperText,
   inputProps,
   ...rest
 }: FormFieldProps<T>) => (
