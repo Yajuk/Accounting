@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import ThemeProviderWrapper from "@/components/theme/ThemeProvider";
-import { StyledEngineProvider } from "@mui/material";
 import "./globals.css";
+
+import AllProviders from "@/context/allproviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <StyledEngineProvider injectFirst>
-          <AppRouterCacheProvider>
-            <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
-          </AppRouterCacheProvider>
-        </StyledEngineProvider>
+        <AllProviders>{children}</AllProviders>
       </body>
     </html>
   );
