@@ -4,6 +4,7 @@ import { error } from "console";
 const BASE_URL = process.env.NEXT_PUBLIC_BRAND_URL;
 import { ErrorResponse, SuccessResponse } from "@/utils/error/types";
 import { errorHandler } from "@/utils/error/errorHandler";
+import { getAccessToken } from "@/utils/localStorage";
 
 const defaultHeaders = {
   "Cache-Control": "no-cache",
@@ -42,7 +43,7 @@ export async function apiClient({
 } & Omit<AxiosRequestConfig, "url" | "method" | "data" | "headers">): Promise<
   AxiosResponse["data"] | null
 > {
-  const token = localStorage.getItem("AUTH_TOKEN");
+  const token = getAccessToken();
 
   try {
     const res: AxiosResponse = await defaultAxios({

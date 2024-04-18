@@ -1,21 +1,24 @@
+"use client";
 import { useAccount } from "@/context/accountProvider";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const PageLayout = ({ children }: any) => {
   const { account } = useAccount();
   const router = useRouter();
-
-  console.log(router);
+  const pathName = usePathname();
 
   useEffect(() => {
     if (!account) {
       router.replace("/login");
+      return;
     }
-
-    if (account) {
-      console.log(account);
-      router.push("/home");
+    if (account && pathName === "/login") {
+      router.replace("/");
+      return;
+    }
+    if (account && pathName) {
+      router.replace(pathName);
     }
   }, [account]);
   return <>{children}</>;

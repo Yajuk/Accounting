@@ -52,6 +52,10 @@ const removeUserAccount = () => {
   removeKey(USER_ACCOUNT);
 };
 
+const logOut = () => {
+  clear();
+};
+
 export {
   setKey,
   getKey,
@@ -66,4 +70,5 @@ export {
   setUserAccount,
   getUserAccount,
   removeUserAccount,
+  logOut,
 };

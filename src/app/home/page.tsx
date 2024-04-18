@@ -1,20 +1,16 @@
-async function getData() {
-  const res = await fetch("http://localhost:4001/api/users", {
-    cache: "no-store",
-  });
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
-
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
-}
-
 const Home = async () => {
-  const users = await getData();
-  return <div>Home Page {users.message}</div>;
+  // genrate tiles with links to different pages  using tailwind css and mui
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <a href="/chat" className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold">Accounts</h2>
+      </a>
+      <a href="/transactions" className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold">Transactions</h2>
+      </a>
+    </div>
+  );
+  return <div>Home Page </div>;
 };
 
 export default Home;
