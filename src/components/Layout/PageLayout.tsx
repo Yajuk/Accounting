@@ -1,4 +1,3 @@
-"use client";
 import { useAccount } from "@/context/accountProvider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -16,7 +15,7 @@ const PageLayout = ({ children }: any) => {
 
     if (account) {
       console.log(account);
-      router.push("/");
+      router.push("/home");
     }
   }, [account]);
   return <>{children}</>;

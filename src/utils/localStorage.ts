@@ -1,3 +1,4 @@
+"use client";
 const ACCESS_TOKEN: string = "accessToken";
 const REFRESH_TOKEN: string = "refreshToken";
 const USER_ACCOUNT: string = "userAccount";
@@ -6,6 +7,7 @@ const setKey = (key: string, value: string) => {
   localStorage.setItem(key, value);
 };
 const getKey = (key: string): string | null => {
+  if (typeof window === "undefined") return null;
   return localStorage.getItem(key);
 };
 const removeKey = (key: string) => {
