@@ -11,6 +11,7 @@ import ChatSearch from "./ChatSearch";
 
 const ChatList = () => {
   const [chats, setChats] = useState<Chat[]>([]);
+  const [activeChat, setActiveChat] = useState<string | null>(null);
   useEffect(() => {
     const getChatList = async () => {
       try {
@@ -40,9 +41,16 @@ const ChatList = () => {
   return (
     <div className="chat-list">
       <ChatSearch onSearch={setChats} />
-      {chats.map((chat) => (
-        <ChatItem key={chat._id} chat={chat} />
-      ))}
+      <div className="flex lg:flex-col overflow-auto">
+        {chats.map((chat) => (
+          <ChatItem
+            key={chat._id}
+            chat={chat}
+            activeChat={activeChat}
+            setActiveChat={setActiveChat}
+          />
+        ))}
+      </div>
     </div>
   );
 };
