@@ -17,7 +17,9 @@ const ChatList = () => {
   useEffect(() => {
     const getChatList = async () => {
       try {
-        const response = await chatList();
+        const response = await chatList({
+          limit: 500,
+        });
         setChats(response.data.data);
       } catch (error: unknown) {
         console.log(error);
@@ -41,10 +43,10 @@ const ChatList = () => {
   }, []);
 
   return (
-    <div className="chat-list">
+    <div className="chat-list h-[70%]">
       <ChatListHeader />
       <ChatSearch onSearch={setChats} />
-      <div className="flex lg:flex-col overflow-auto">
+      <div className="flex lg:flex-col overflow-auto h-full">
         {chats.map((chat) => (
           <ChatItem
             key={chat._id}

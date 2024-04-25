@@ -23,6 +23,8 @@ interface ChatList {
 
 interface IParams {
   search?: string;
+  page?: number;
+  limit?: number;
 }
 
 const chatList = async (params?: IParams) => {
