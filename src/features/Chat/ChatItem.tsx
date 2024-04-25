@@ -15,21 +15,21 @@ const ChatItem: React.FC<Props> = ({ chat, setActiveChat, activeChat }) => {
   return (
     <Link href={`/chat/${chat._id}`} onClick={() => setActiveChat(chat._id)}>
       <div
-        className={`flex cursor-pointer focus:bg-gray-100 items-center justify-between border-b border-gray-200 py-4 ${isActive ? "bg-gray-100" : ""}`}
+        className={`flex cursor-pointer focus:bg-gray-100 items-center justify-between border lg:border-0 lg:m-0  m-2 rounded-sm lg:rounded-none  lg:border-b border-gray-200 py-4 ${isActive ? "bg-gray-100" : ""}`}
       >
         <div className="flex items-center p-4 lg:p-1">
-          <div className="w-12 h-12 bg-gray-300 flex items-center justify-center rounded-full mr-4">
+          <div className="w-12 h-12 bg-gray-300 flex items-center justify-center rounded-full  mr-4">
             <AccountCircle fontSize="large" />
           </div>
           <div>
-            <h2 className="font-bold text-lg">{chat.name}</h2>
+            <h2 className="lg:font-bold text-sm lg:text-lg">{chat.name}</h2>
             <p className="text-sm hidden lg:block text-gray-500">
               {formatTimestamp(chat.updatedAt)}
             </p>
           </div>
         </div>
         <div className="lg:flex hidden items-center">
-          <p className="mr-4">{chat.participants.length}</p>
+          <p className="mr-4 text-sm">{chat.participants.length}</p>
           <Group />
         </div>
       </div>
