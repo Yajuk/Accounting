@@ -1,4 +1,4 @@
-import MainChat from "@/components/Chat/MainChat";
+import MainChat from "@/features/Chat/MainChat";
 
 interface Props {
   params: {

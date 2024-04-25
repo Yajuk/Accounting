@@ -6,6 +6,7 @@ import { ErrorResponse } from "@/utils/error/types";
 import { formatTimestamp } from "@/utils/date";
 import ChatItem from "./ChatItem";
 import ChatSearch from "./ChatSearch";
+import ChatListHeader from "./ChatListHeader";
 
 // write chatSearch compoet
 
@@ -40,6 +41,7 @@ const ChatList = () => {
 
   return (
     <div className="chat-list">
+      <ChatListHeader />
       <ChatSearch onSearch={setChats} />
       <div className="flex lg:flex-col overflow-auto">
         {chats.map((chat) => (

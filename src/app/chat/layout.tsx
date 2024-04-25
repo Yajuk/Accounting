@@ -1,4 +1,4 @@
-import ChatList from "@/components/Chat/ChatList";
+import ChatList from "@/features/Chat/ChatList";
 
 const ChatLayout = async ({ children }: any) => {
   return (
@@ -10,7 +10,7 @@ const ChatLayout = async ({ children }: any) => {
         <div className="lg:w-1/4 lg:min-h-screen h-64  px-1 border-gray-100 border">
           <ChatList />
         </div>
-        <main className="lg:w-3/4 min-h-screen px-1  w-full">{children}</main>
+        <main className="lg:w-3/4 min-h-screen pl-0  w-full">{children}</main>
       </div>
     </div>
   );

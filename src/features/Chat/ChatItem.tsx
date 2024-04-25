@@ -3,7 +3,6 @@ import { Chat } from "@/services/chat/chatService";
 import { formatTimestamp } from "@/utils/date";
 import Link from "next/link";
 import { Group, AccountCircle } from "@mui/icons-material";
-import { set } from "react-hook-form";
 
 interface Props {
   chat: Chat;
