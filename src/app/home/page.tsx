@@ -1,16 +1,21 @@
+import Link from "next/link";
 const Home = async () => {
-  // genrate tiles with links to different pages  using tailwind css and mui
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <a href="/chat" className="bg-white p-6 rounded-lg shadow">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Link
+        href="/chat"
+        className="bg-white p-6 rounded-lg shadow-md flex items-center justify-center transition duration-300 ease-in-out transform hover:scale-105"
+      >
         <h2 className="text-xl font-semibold">Accounts</h2>
-      </a>
-      <a href="/transactions" className="bg-white p-6 rounded-lg shadow">
+      </Link>
+      <Link
+        href="/transactions"
+        className="bg-white p-6 rounded-lg shadow-md flex items-center justify-center transition duration-300 ease-in-out transform hover:scale-105"
+      >
         <h2 className="text-xl font-semibold">Transactions</h2>
-      </a>
+      </Link>
     </div>
   );
-  return <div>Home Page </div>;
 };
 
 export default Home;

@@ -24,7 +24,7 @@ const Message = ({
           className="w-10 h-10 rounded-full mr-4"
         />
       )}
-      <div className={`bg-white p-4 rounded-lg max-w-md ${containerClass}`}>
+      <div className={`bg-white p-2 rounded-lg max-w-md ${containerClass}`}>
         <p
           className={`text-sm ${bubbleClass} w-full overflow-hidden break-words p-2 rounded-lg`}
           style={{ maxHeight: "200px" }}
