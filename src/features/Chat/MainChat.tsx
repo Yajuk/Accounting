@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Message from "./Message";
 import ChatHeader from "./ChatHeader";
+import { Send } from "@mui/icons-material";
 
 interface IMessage {
   sender: string;
@@ -11,6 +12,7 @@ interface IMessage {
   timestamp: string;
 }
 const MainChat = ({ chatId }: { chatId: string }) => {
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([
     {
       sender: "John",
@@ -28,6 +30,21 @@ const MainChat = ({ chatId }: { chatId: string }) => {
   useEffect(() => {
     console.log(chatId);
   }, [chatId]);
+
+  const onSendMessage = () => {
+    if (message) {
+      setMessages([
+        ...messages,
+        {
+          sender: "John",
+          senderAvatar: "https://via.placeholder.com/50",
+          text: message,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+      setMessage("");
+    }
+  };
   return (
     <>
       <ChatHeader chatId={chatId} />
@@ -39,23 +56,22 @@ const MainChat = ({ chatId }: { chatId: string }) => {
           <Message key={index} message={message} isSender={index % 2 === 0} />
         ))}
 
-        <div className="flex justify-center fixed w-full bottom-1 lg:left-1/4 right-0 p-4">
+        <div className="flex justify-center fixed w-full bottom-1 bg-white  lg:left-1/4 lg:w-3/4 right-0 p-4 ">
           <input
             type="text"
             placeholder="Type your message"
+            value={message}
             className="w-full p-2 border border-gray-300 rounded-md"
             onChange={(e) => {
-              setMessages([
-                ...messages,
-                {
-                  sender: "John",
-                  senderAvatar: "https://via.placeholder.com/50",
-                  text: e.target.value,
-                  timestamp: "2022-01-01T00:00:00.000Z",
-                },
-              ]);
+              setMessage(e.target.value);
             }}
           />
+          <button
+            onClick={onSendMessage}
+            className="ml-4 cursor-pointer border border-gray-300 flex items-center justify-center rounded-full p-2"
+          >
+            <Send />
+          </button>
         </div>
       </div>
     </>

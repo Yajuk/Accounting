@@ -2,19 +2,30 @@ import { apiClient } from "@/config/apiClient";
 import { errorHandler } from "@/utils/error/errorHandler";
 import { ErrorResponse, SuccessResponse } from "@/utils/error/types";
 
-type ISignInResponse = [
-  {
-    _id: string;
-    name: string;
-    email: string;
-  },
-];
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+}
 
-export const getUsers = async () => {
+export interface IUserList {
+  currentPage: number;
+  nextPage: number | null;
+  totalPages: number;
+  data: IUser[];
+}
+export interface IParams {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export const getUsers = async (params?: IParams) => {
   try {
-    const response: SuccessResponse<ISignInResponse> = await apiClient({
+    const response: SuccessResponse<IUserList> = await apiClient({
       url: "/users",
       method: "GET",
+      params: params,
     });
     return response;
   } catch (error) {

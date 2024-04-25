@@ -1,6 +1,6 @@
 "use client";
 import { Add } from "@mui/icons-material";
-import UsersListWithSearch from "@/components/common/UsersListWithSearch";
+import UsersListWithSearch from "@/components/common/Users/UsersListWithSearch";
 import React from "react";
 import { Box, Popover } from "@mui/material";
 
@@ -43,6 +43,9 @@ const ChatListHeader = () => {
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",
+        }}
+        sx={{
+          height: "50%",
         }}
       >
         <Box>
