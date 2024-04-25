@@ -2,7 +2,7 @@ import * as React from "react";
 import { Chat } from "@/services/chat/chatService";
 import { formatTimestamp } from "@/utils/date";
 import Link from "next/link";
-import { Group, AccountCircle } from "@mui/icons-material";
+import { Group, AccountCircle, Person } from "@mui/icons-material";
 
 interface Props {
   chat: Chat;
@@ -22,7 +22,10 @@ const ChatItem: React.FC<Props> = ({ chat, setActiveChat, activeChat }) => {
             <AccountCircle fontSize="large" />
           </div>
           <div>
-            <h2 className="lg:font-bold text-sm lg:text-lg">{chat.name}</h2>
+            <h2 className="lg:font-bold text-sm lg:text-lg">
+              {chat.name}{" "}
+              <span className="text-xs text-gray-500">({chat.type})</span>
+            </h2>
             <p className="text-sm hidden lg:block text-gray-500">
               {formatTimestamp(chat.updatedAt)}
             </p>
@@ -30,7 +33,7 @@ const ChatItem: React.FC<Props> = ({ chat, setActiveChat, activeChat }) => {
         </div>
         <div className="lg:flex hidden items-center">
           <p className="mr-4 text-sm">{chat.participants.length}</p>
-          <Group />
+          {chat.type === "group" ? <Group /> : <Person />}
         </div>
       </div>
     </Link>

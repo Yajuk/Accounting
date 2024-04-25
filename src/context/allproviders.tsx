@@ -4,17 +4,21 @@ import { StyledEngineProvider } from "@mui/material";
 import { AccountProvider } from "./accountProvider";
 import ThemeProviderWrapper from "@/components/theme/ThemeProvider";
 import PageLayout from "@/components/Layout/PageLayout";
+import { Chat } from "@mui/icons-material";
+import { ChatProvider } from "./ChatProvider";
 
 const AllProviders = ({ children }: any) => {
   return (
     <AccountProvider>
-      <AppRouterCacheProvider>
-        <StyledEngineProvider injectFirst>
-          <ThemeProviderWrapper>
-            <PageLayout>{children}</PageLayout>
-          </ThemeProviderWrapper>
-        </StyledEngineProvider>
-      </AppRouterCacheProvider>
+      <ChatProvider>
+        <AppRouterCacheProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProviderWrapper>
+              <PageLayout>{children}</PageLayout>
+            </ThemeProviderWrapper>
+          </StyledEngineProvider>
+        </AppRouterCacheProvider>
+      </ChatProvider>
     </AccountProvider>
   );
 };

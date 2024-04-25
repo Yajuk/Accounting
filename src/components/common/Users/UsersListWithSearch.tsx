@@ -4,7 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import UserListItem from "./UserItem";
 import { set } from "react-hook-form";
 
-const UsersListWithSearch = () => {
+interface IUsersListWithSearchProps {
+  onSelect: (user: AccountService.IUser) => void;
+}
+const UsersListWithSearch = ({ onSelect }: IUsersListWithSearchProps) => {
   const [users, setUsers] = useState<AccountService.IUser[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -53,7 +56,7 @@ const UsersListWithSearch = () => {
         {users?.map((user) => (
           <div
             key={user._id}
-            onClick={() => console.log(user)}
+            onClick={() => onSelect(user)}
             className="cursor-pointer"
           >
             <UserListItem user={user} />

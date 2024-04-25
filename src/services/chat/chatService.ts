@@ -25,7 +25,7 @@ interface IParams {
   search?: string;
 }
 
-export const chatList = async (params?: IParams) => {
+const chatList = async (params?: IParams) => {
   try {
     const response: ApiResponse<ChatList> = await apiClient({
       url: "/chats",
@@ -37,3 +37,25 @@ export const chatList = async (params?: IParams) => {
     throw error;
   }
 };
+
+interface IPayload {
+  name: string;
+  participants: string[];
+  type: "private" | "group";
+}
+const createChat = async (data: IPayload) => {
+  try {
+    const response: ApiResponse<Chat> = await apiClient({
+      url: "/chats",
+      method: "POST",
+      data: {
+        ...data,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { createChat, chatList };

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Message from "./Message";
 import ChatHeader from "./ChatHeader";
 import { Send } from "@mui/icons-material";
+import { useChat } from "@/context/ChatProvider";
 
 interface IMessage {
   sender: string;
@@ -12,6 +13,7 @@ interface IMessage {
   timestamp: string;
 }
 const MainChat = ({ chatId }: { chatId: string }) => {
+  const { setActiveChatId } = useChat();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([
     {
@@ -27,9 +29,6 @@ const MainChat = ({ chatId }: { chatId: string }) => {
       timestamp: "2022-01-01T00:00:00.000Z",
     },
   ]);
-  useEffect(() => {
-    console.log(chatId);
-  }, [chatId]);
 
   const onSendMessage = () => {
     if (message) {
@@ -45,6 +44,10 @@ const MainChat = ({ chatId }: { chatId: string }) => {
       setMessage("");
     }
   };
+
+  useEffect(() => {
+    setActiveChatId(chatId);
+  }, [chatId]);
   return (
     <>
       <ChatHeader chatId={chatId} />

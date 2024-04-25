@@ -7,12 +7,13 @@ import { formatTimestamp } from "@/utils/date";
 import ChatItem from "./ChatItem";
 import ChatSearch from "./ChatSearch";
 import ChatListHeader from "./ChatListHeader";
+import { useChat } from "@/context/ChatProvider";
 
 // write chatSearch compoet
 
 const ChatList = () => {
   const [chats, setChats] = useState<Chat[]>([]);
-  const [activeChat, setActiveChat] = useState<string | null>(null);
+  const { activeChatId, setActiveChatId } = useChat();
   useEffect(() => {
     const getChatList = async () => {
       try {
@@ -48,8 +49,8 @@ const ChatList = () => {
           <ChatItem
             key={chat._id}
             chat={chat}
-            activeChat={activeChat}
-            setActiveChat={setActiveChat}
+            activeChat={activeChatId}
+            setActiveChat={setActiveChatId}
           />
         ))}
       </div>

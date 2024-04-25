@@ -3,6 +3,8 @@ import { Add } from "@mui/icons-material";
 import UsersListWithSearch from "@/components/common/Users/UsersListWithSearch";
 import React from "react";
 import { Box, Popover } from "@mui/material";
+import { IUser } from "@/services/account/accountService";
+import * as ChatService from "@/services/chat/chatService";
 
 const style = {
   position: "absolute" as "absolute",
@@ -28,6 +30,22 @@ const ChatListHeader = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const onSelectUser = async (user: IUser) => {
+    try {
+      const res = await ChatService.createChat({
+        name: user.name,
+        participants: [user._id],
+        type: "private",
+      });
+
+      if (res.data) {
+        window.location.href = `/chat/${res.data._id}`;
+      }
+    } catch (error) {
+      console.error("Error selecting user:", error);
+    }
+  };
   return (
     <div className="flex items-center justify-between h-12 bg-white rounded-sm px-3">
       <span>Chat List</span>
@@ -49,7 +67,7 @@ const ChatListHeader = () => {
         }}
       >
         <Box>
-          <UsersListWithSearch />
+          <UsersListWithSearch onSelect={onSelectUser} />
         </Box>
       </Popover>
     </div>
