@@ -42,17 +42,20 @@ const UsersListWithSearch = () => {
   return (
     <Box className="p-4 flex flex-col relative w-full">
       <Box className="flex flex-col bg-gray-200 shadow-sm rounded-sm p-2 items-center justify-between">
-        <h1 className="text-lg font-bold">Search Users</h1>
         <input
           placeholder="Search User"
-          className="p-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="p-2 w-full border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="text"
           onChange={(e) => setSearch(e.target.value)}
         />
       </Box>
       <Box className="flex flex-col mt-4">
         {users?.map((user) => (
-          <div key={user._id} onClick={() => console.log(user)}>
+          <div
+            key={user._id}
+            onClick={() => console.log(user)}
+            className="cursor-pointer"
+          >
             <UserListItem user={user} />
           </div>
         ))}
@@ -60,6 +63,7 @@ const UsersListWithSearch = () => {
           <Button
             className="mt-2 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
             onClick={() => setPage(page + 1)}
+            size="small"
           >
             Load More
           </Button>
