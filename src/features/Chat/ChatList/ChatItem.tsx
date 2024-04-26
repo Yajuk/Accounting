@@ -6,14 +6,26 @@ import { Group, AccountCircle, Person } from "@mui/icons-material";
 
 interface Props {
   chat: Chat;
-  setActiveChat: React.Dispatch<React.SetStateAction<string | null>>;
+  setActiveChatId: React.Dispatch<React.SetStateAction<string | null>>;
+  setActiveChat: React.Dispatch<React.SetStateAction<Chat | null>>;
   activeChat: string | null;
 }
 
-const ChatItem: React.FC<Props> = ({ chat, setActiveChat, activeChat }) => {
+const ChatItem: React.FC<Props> = ({
+  chat,
+  setActiveChatId,
+  activeChat,
+  setActiveChat,
+}) => {
   const isActive = chat._id === activeChat;
   return (
-    <Link href={`/chat/${chat._id}`} onClick={() => setActiveChat(chat._id)}>
+    <Link
+      href={`/chat/${chat._id}`}
+      onClick={() => {
+        setActiveChatId(chat._id);
+        setActiveChat(chat);
+      }}
+    >
       <div
         className={`flex cursor-pointer focus:bg-gray-100 items-center justify-between border lg:border-0 lg:m-0  m-2 rounded-sm lg:rounded-none  lg:border-b border-gray-200 py-4 ${isActive ? "bg-gray-100" : ""}`}
       >

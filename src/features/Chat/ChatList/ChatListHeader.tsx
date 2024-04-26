@@ -5,6 +5,7 @@ import React from "react";
 import { Box, Popover } from "@mui/material";
 import { IUser } from "@/services/account/accountService";
 import * as ChatService from "@/services/chat/chatService";
+import { useChat } from "@/context/ChatProvider";
 
 const style = {
   position: "absolute" as "absolute",
@@ -17,6 +18,7 @@ const style = {
   p: 4,
 };
 const ChatListHeader = () => {
+  const { setActiveChat } = useChat();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null,
   );
@@ -41,6 +43,7 @@ const ChatListHeader = () => {
 
       if (res.data) {
         window.location.href = `/chat/${res.data._id}`;
+        setActiveChat(res.data);
       }
     } catch (error) {
       console.error("Error selecting user:", error);

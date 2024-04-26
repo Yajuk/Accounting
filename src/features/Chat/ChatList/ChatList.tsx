@@ -13,7 +13,7 @@ import { useChat } from "@/context/ChatProvider";
 
 const ChatList = () => {
   const [chats, setChats] = useState<Chat[]>([]);
-  const { activeChatId, setActiveChatId } = useChat();
+  const { activeChatId, setActiveChatId, setActiveChat } = useChat();
   useEffect(() => {
     const getChatList = async () => {
       try {
@@ -52,7 +52,8 @@ const ChatList = () => {
             key={chat._id}
             chat={chat}
             activeChat={activeChatId}
-            setActiveChat={setActiveChatId}
+            setActiveChatId={setActiveChatId}
+            setActiveChat={setActiveChat}
           />
         ))}
       </div>

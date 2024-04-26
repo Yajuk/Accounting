@@ -13,7 +13,7 @@ interface IMessage {
   timestamp: string;
 }
 const MainChat = ({ chatId }: { chatId: string }) => {
-  const { setActiveChatId } = useChat();
+  const { setActiveChatId, activeChat } = useChat();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([
     {
@@ -50,7 +50,7 @@ const MainChat = ({ chatId }: { chatId: string }) => {
   }, [chatId]);
   return (
     <>
-      <ChatHeader chatId={chatId} />
+      <ChatHeader chatId={chatId} chatName={activeChat?.name} />
       <div
         id="chat-container"
         className="h-full w-full overflow-y-auto bg-gray-100 p-4 "
