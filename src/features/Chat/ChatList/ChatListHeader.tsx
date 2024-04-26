@@ -18,7 +18,6 @@ const style = {
   p: 4,
 };
 const ChatListHeader = () => {
-  const { setActiveChat } = useChat();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null,
   );
@@ -43,7 +42,6 @@ const ChatListHeader = () => {
 
       if (res.data) {
         window.location.href = `/chat/${res.data._id}`;
-        setActiveChat(res.data);
       }
     } catch (error) {
       console.error("Error selecting user:", error);

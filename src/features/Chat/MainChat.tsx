@@ -50,7 +50,7 @@ const MainChat = ({ chatId }: { chatId: string }) => {
   }, [chatId]);
   return (
     <>
-      <ChatHeader chatId={chatId} chatName={activeChat?.name} />
+      <ChatHeader chatId={activeChat?._id} chatName={activeChat?.name} />
       <div
         id="chat-container"
         className="h-full w-full overflow-y-auto bg-gray-100 p-4 "

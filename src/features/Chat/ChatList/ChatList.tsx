@@ -42,6 +42,15 @@ const ChatList = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (activeChatId) {
+      const chat = chats.find((chat) => chat._id === activeChatId);
+      if (chat) {
+        setActiveChat(chat);
+      }
+    }
+  }, [activeChatId, chats, setActiveChat]);
+
   return (
     <div className="chat-list h-[70%]">
       <ChatListHeader />
