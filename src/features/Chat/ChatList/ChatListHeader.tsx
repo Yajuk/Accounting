@@ -1,22 +1,10 @@
 "use client";
 import { Add } from "@mui/icons-material";
-import UsersListWithSearch from "@/components/common/Users/UsersListWithSearch";
 import React from "react";
-import { Box, Popover } from "@mui/material";
-import { IUser } from "@/services/account/accountService";
-import * as ChatService from "@/services/chat/chatService";
-import { useChat } from "@/context/ChatProvider";
+import { Popover } from "@mui/material";
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
+import CreateChatWindow from "./createChatWindow";
+
 const ChatListHeader = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null,
@@ -32,21 +20,6 @@ const ChatListHeader = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-  const onSelectUser = async (user: IUser) => {
-    try {
-      const res = await ChatService.createChat({
-        name: user.name,
-        participants: [user._id],
-        type: "private",
-      });
-
-      if (res.data) {
-        window.location.href = `/chat/${res.data._id}`;
-      }
-    } catch (error) {
-      console.error("Error selecting user:", error);
-    }
-  };
   return (
     <div className="flex items-center justify-between h-12 bg-white rounded-sm px-3">
       <span>Chat List</span>
@@ -64,12 +37,10 @@ const ChatListHeader = () => {
           horizontal: "left",
         }}
         sx={{
-          height: "50%",
+          height: "60%",
         }}
       >
-        <Box>
-          <UsersListWithSearch onSelect={onSelectUser} />
-        </Box>
+        <CreateChatWindow />
       </Popover>
     </div>
   );

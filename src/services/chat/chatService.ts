@@ -40,6 +40,11 @@ const chatList = async (params?: IParams) => {
   }
 };
 
+export const CHAT_TYPES = {
+  PRIVATE: "private",
+  GROUP: "group",
+};
+
 interface IPayload {
   name: string;
   participants: string[];
