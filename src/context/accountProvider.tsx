@@ -1,7 +1,7 @@
 // Add React import
 "use client";
 import { getUserAccount } from "@/utils/localStorage";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 interface IAccountProviderProps {
   children: React.ReactNode;
@@ -10,6 +10,7 @@ interface IAccountProviderProps {
 // Remove ReturnType usage
 interface AccountContextProps {
   account: null | undefined;
+  loggedInUserId: string | undefined;
   setAccount: React.Dispatch<React.SetStateAction<null | undefined>>;
 }
 
@@ -20,12 +21,16 @@ export const AccountProvider = ({ children }: IAccountProviderProps) => {
   const [account, setAccount] = useState<null | undefined>(
     userAccount || undefined,
   );
+  const loggedInUserId = useMemo(() => {
+    return userAccount?._id;
+  }, [userAccount?._id]);
 
   return (
     <AccountContext.Provider
       value={{
         account,
         setAccount,
+        loggedInUserId,
       }}
     >
       {children}

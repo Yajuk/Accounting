@@ -1,6 +1,7 @@
 "use client";
 import { Chat } from "@/services/chat/chatService";
 import React, { useState } from "react";
+import { SocketProvider } from "./socketContext";
 
 interface IChatProviderProps {
   children: React.ReactNode;
@@ -17,16 +18,18 @@ export const ChatProvider = ({ children }: IChatProviderProps) => {
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
 
   return (
-    <ChatContext.Provider
-      value={{
-        activeChatId,
-        setActiveChatId,
-        activeChat,
-        setActiveChat,
-      }}
-    >
-      {children}
-    </ChatContext.Provider>
+    <SocketProvider>
+      <ChatContext.Provider
+        value={{
+          activeChatId,
+          setActiveChatId,
+          activeChat,
+          setActiveChat,
+        }}
+      >
+        {children}
+      </ChatContext.Provider>
+    </SocketProvider>
   );
 };
 

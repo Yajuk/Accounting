@@ -1,3 +1,4 @@
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import React from "react";
 
 const Message = ({
@@ -18,18 +19,24 @@ const Message = ({
   return (
     <div className={messageClass}>
       {!isSender && (
-        <img
-          src={message.senderAvatar}
-          alt={message.sender}
-          className="w-10 h-10 rounded-full mr-4"
-        />
+        // <img
+        //   src={message.senderAvatar}
+        //   alt={message.sender}
+        //   className="w-10 h-10 rounded-full mr-4"
+        // />
+        <div className="w-12 h-12 bg-gray-300 flex items-center justify-center rounded-full  mr-4">
+          <AccountCircle className="text-sm lg:text-3xl" />
+        </div>
       )}
       <div className={`bg-white p-2 rounded-lg max-w-md ${containerClass}`}>
+        {!isSender && (
+          <p className="text-xs text-gray-500 pb-1">{message.sender.name}</p>
+        )}
         <p
           className={`text-sm ${bubbleClass} w-full overflow-hidden break-words p-2 rounded-lg`}
           style={{ maxHeight: "200px" }}
         >
-          {message.text}
+          {message.content}
         </p>
       </div>
     </div>
