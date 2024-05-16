@@ -1,11 +1,13 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import React from "react";
+import * as messageService from "@/services/chat/messageService";
+import { formatTime, formatTimestamp } from "@/utils/date";
 
 const Message = ({
   message,
   isSender,
 }: {
-  message: any;
+  message: messageService.Message;
   isSender: boolean;
 }) => {
   const messageClass = isSender
@@ -37,6 +39,9 @@ const Message = ({
           style={{ maxHeight: "200px" }}
         >
           {message.content}
+        </p>
+        <p className="text-xs w-full text-gray-500 pt-1 lowercase text-right">
+          {message.createdAt && formatTime(new Date(message.createdAt))}
         </p>
       </div>
     </div>

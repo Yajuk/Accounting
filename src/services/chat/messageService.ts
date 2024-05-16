@@ -9,7 +9,9 @@ export interface Message {
     email: string;
   };
   content: string;
-  chatId: string;
+  chat: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 const sendMessage = async (data: Message) => {
@@ -20,6 +22,7 @@ const sendMessage = async (data: Message) => {
       data: {
         ...data,
         sender: data.sender._id,
+        chatId: data.chat,
       },
     });
     return response;

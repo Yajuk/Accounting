@@ -10,7 +10,7 @@ import { ChatEventEnum } from "@/constants";
 import * as messageService from "@/services/chat/messageService";
 import { useAccount } from "@/context/accountProvider";
 const MainChat = ({ chatId }: { chatId: string }) => {
-  const { setActiveChatId, activeChat } = useChat();
+  const { setActiveChatId, activeChat, chats } = useChat();
   const { loggedInUserId } = useAccount();
 
   const { socket, setUnreadMessages, unreadMessages } = useSocket();
@@ -45,7 +45,7 @@ const MainChat = ({ chatId }: { chatId: string }) => {
             name: "",
             email: "",
           },
-          chatId,
+          chat: chatId,
           content: message,
         });
         console.log(res);
@@ -60,33 +60,90 @@ const MainChat = ({ chatId }: { chatId: string }) => {
     }
   };
 
-  useEffect(() => {
-    if (socket) {
+  const onMessageReceived = (message: messageService.Message) => {
+    if (message?.chat !== chatId) {
+      // If not, update the list of unread messages
+      setUnreadMessages([message, ...unreadMessages]);
+    } else {
+      // If it belongs to the current chat, update the messages list for the active chat
+      setMessages((prev) => [...prev, message]);
     }
-  }, [socket]);
+  };
 
   useEffect(() => {
     setActiveChatId(chatId);
     if (socket) {
       socket.emit(ChatEventEnum.JOIN_CHAT_EVENT, chatId);
       getMessages();
-
-      socket.on(
-        ChatEventEnum.MESSAGE_RECEIVED_EVENT,
-        (message: messageService.Message) => {
-          console.log("message received", message);
-          if (message?.chatId !== chatId) {
-            // If not, update the list of unread messages
-            setUnreadMessages([message, ...unreadMessages]);
-          } else {
-            // If it belongs to the current chat, update the messages list for the active chat
-            setMessages((prev) => [message, ...prev]);
-          }
-          setMessages((prevMessages) => [...prevMessages, message]);
-        },
-      );
     }
   }, [chatId, socket]);
+
+  const onEvent = (event: any) => {
+    console.log(event);
+  };
+
+  useEffect(() => {
+    // If the socket isn't initialized, we don't set up listeners.
+    if (!socket) return;
+    const {
+      MESSAGE_RECEIVED_EVENT,
+      CONNECTED_EVENT,
+      DISCONNECT_EVENT,
+      TYPING_EVENT,
+      STOP_TYPING_EVENT,
+      NEW_CHAT_EVENT,
+      LEAVE_CHAT_EVENT,
+      UPDATE_GROUP_NAME_EVENT,
+    } = ChatEventEnum;
+
+    // Set up event listeners for various socket events:
+    // Listener for when the socket connects.
+    socket.on(CONNECTED_EVENT, onEvent);
+    // Listener for when the socket disconnects.
+    socket.on(DISCONNECT_EVENT, onEvent);
+    // Listener for when a user is typing.
+    socket.on(TYPING_EVENT, onEvent);
+    // Listener for when a user stops typing.
+    socket.on(STOP_TYPING_EVENT, onEvent);
+    // Listener for when a new message is received.
+    socket.on(MESSAGE_RECEIVED_EVENT, onMessageReceived);
+    // Listener for the initiation of a new chat.
+    socket.on(NEW_CHAT_EVENT, onEvent);
+    // Listener for when a user leaves a chat.
+    socket.on(LEAVE_CHAT_EVENT, onEvent);
+    // Listener for when a group's name is updated.
+    socket.on(UPDATE_GROUP_NAME_EVENT, onEvent);
+
+    // When the component using this hook unmounts or if `socket` or `chats` change:
+    return () => {
+      // Remove all the event listeners we set up to avoid memory leaks and unintended behaviors.
+      socket.off(CONNECTED_EVENT, onEvent);
+      socket.off(DISCONNECT_EVENT, onEvent);
+      socket.off(TYPING_EVENT, onEvent);
+      socket.off(STOP_TYPING_EVENT, onEvent);
+      socket.off(MESSAGE_RECEIVED_EVENT, onMessageReceived);
+      socket.off(NEW_CHAT_EVENT, onEvent);
+      socket.off(LEAVE_CHAT_EVENT, onEvent);
+      socket.off(UPDATE_GROUP_NAME_EVENT, onEvent);
+    };
+
+    // Note:
+    // The `chats` array is used in the `onMessageReceived` function.
+    // We need the latest state value of `chats`. If we don't pass `chats` in the dependency array,
+    // the `onMessageReceived` will consider the initial value of the `chats` array, which is empty.
+    // This will not cause infinite renders because the functions in the socket are getting mounted and not executed.
+    // So, even if some socket callbacks are updating the `chats` state, it's not
+    // updating on each `useEffect` call but on each socket call.
+  }, [socket, chats]);
+
+  //write logic to scroll dive to bottom
+  useEffect(() => {
+    const chatContainer = document.getElementById("chat-container");
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }, [messages]);
+
   return (
     <>
       <ChatHeader chatId={activeChat?._id} chatName={activeChat?.name} />
