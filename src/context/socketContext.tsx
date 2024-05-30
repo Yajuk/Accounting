@@ -37,8 +37,10 @@ export const useSocket = () => {
 // Function to establish a socket connection with authorization token
 const getSocket = () => {
   const token = localStorage.getItem("accessToken");
+  const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URI || "";
+  debugger;
   try {
-    return io("http://localhost:4000", {
+    return io(socketUrl, {
       reconnectionDelayMax: 10000,
       withCredentials: true,
       auth: { token },
