@@ -24,7 +24,7 @@ const MainChat = ({ chatId }: { chatId: string }) => {
     // Emit an event to join the current chat
     socket.emit(ChatEventEnum.JOIN_CHAT_EVENT, chatId);
     // Filter out unread messages from the current chat as those will be read
-    setUnreadMessages(unreadMessages.filter((msg) => msg.chatId !== chatId));
+    setUnreadMessages(unreadMessages.filter((msg) => msg.chat !== chatId));
 
     try {
       // Fetch the messages for the current chat

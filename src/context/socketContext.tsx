@@ -38,7 +38,6 @@ export const useSocket = () => {
 const getSocket = () => {
   const token = localStorage.getItem("accessToken");
   const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URI || "";
-  debugger;
   try {
     return io(socketUrl, {
       reconnectionDelayMax: 10000,
@@ -58,10 +57,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const newSocket = getSocket();
-    setSocket(newSocket);
+    if (newSocket) {
+      setSocket(newSocket);
+    }
 
     return () => {
-      newSocket.close();
+      newSocket?.close();
     };
   }, []);
 
