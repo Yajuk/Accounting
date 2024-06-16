@@ -1,4 +1,3 @@
-import ChatList from "@/features/Chat/ChatList/ChatList";
 import ChatWindow from "@/features/Chat/ChatWindow";
 
 const ChatLayout = async ({ children }: any) => {

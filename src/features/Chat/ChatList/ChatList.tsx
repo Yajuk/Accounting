@@ -9,8 +9,14 @@ import { useChat } from "@/context/ChatProvider";
 // write chatSearch compoet
 
 const ChatList = () => {
-  const { activeChatId, setActiveChatId, setActiveChat, chats, setChats } =
-    useChat();
+  const {
+    activeChatId,
+    setActiveChatId,
+    setActiveChat,
+    chats,
+    setChats,
+    getChatList,
+  } = useChat();
 
   useEffect(() => {
     if (activeChatId) {
@@ -20,6 +26,10 @@ const ChatList = () => {
       }
     }
   }, [activeChatId, chats, setActiveChat]);
+
+  useEffect(() => {
+    getChatList();
+  }, []);
 
   return (
     <div className="chat-list h-[70%]">

@@ -15,34 +15,34 @@ interface IChatContextProps {
   setActiveChat: React.Dispatch<React.SetStateAction<Chat | null>>;
   chats: Chat[];
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+  getChatList: () => Promise<void>;
 }
 const ChatContext = React.createContext<IChatContextProps | null>(null);
 export const ChatProvider = ({ children }: IChatProviderProps) => {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [chats, setChats] = useState<Chat[]>([]);
-
-  useEffect(() => {
-    const getChatList = async () => {
-      try {
-        const response = await chatList({
-          limit: 500,
-        });
-        setChats(response.data.data);
-      } catch (error: unknown) {
-        console.log(error);
-        const errorResponse = error as ErrorResponse;
-        if (Array.isArray(errorResponse?.errors)) {
-          console.log(errorResponse?.errors[0].message);
-        } else if (
-          errorResponse?.errors?.message &&
-          errorResponse?.errors?.message === "TokenExpiredError: jwt expired"
-        ) {
-          console.log(errorResponse?.errors?.message);
-          logOut();
-        }
+  const getChatList = async () => {
+    try {
+      const response = await chatList({
+        limit: 500,
+      });
+      setChats(response.data.data);
+    } catch (error: unknown) {
+      console.log(error);
+      const errorResponse = error as ErrorResponse;
+      if (Array.isArray(errorResponse?.errors)) {
+        console.log(errorResponse?.errors[0].message);
+      } else if (
+        errorResponse?.errors?.message &&
+        errorResponse?.errors?.message === "TokenExpiredError: jwt expired"
+      ) {
+        console.log(errorResponse?.errors?.message);
+        logOut();
       }
-    };
+    }
+  };
+  useEffect(() => {
     try {
       getChatList();
     } catch (error) {
@@ -59,6 +59,7 @@ export const ChatProvider = ({ children }: IChatProviderProps) => {
           setActiveChat,
           chats,
           setChats,
+          getChatList,
         }}
       >
         {children}
