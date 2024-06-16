@@ -8,6 +8,8 @@ import {
   Person,
   MoreVertOutlined,
 } from "@mui/icons-material";
+import { UserDocument } from "../../../../../backend/src/models/v1/User/userModel";
+import { useAccount } from "@/context/accountProvider";
 interface Props {
   chat: Chat;
   setActiveChatId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -22,7 +24,29 @@ const ChatItem: React.FC<Props> = ({
   setActiveChat,
 }) => {
   const isActive = chat._id === activeChat;
+  const loggedInUserId = useAccount().loggedInUserId;
   console.log(chat);
+
+  const getChatName = React.useMemo(() => {
+    if (chat.type === "group") {
+      return chat.name;
+    }
+
+    if (chat.type === "private") {
+      let participant = chat.participants.find(
+        (participant) =>
+          typeof participant !== "string" &&
+          participant?._id !== loggedInUserId,
+      ) as UserDocument | undefined;
+      return participant &&
+        typeof participant === "object" &&
+        "name" in participant
+        ? participant.name
+        : "";
+    }
+    return "";
+  }, [chat.type, chat.name, chat.participants]);
+
   return (
     <div
       className={`flex cursor-pointer focus:bg-gray-100 items-center justify-between border lg:border-0 lg:m-0  m-2 rounded-sm lg:rounded-none  lg:border-b border-gray-200 py-4 ${isActive ? "bg-gray-100" : ""}`}
@@ -40,7 +64,7 @@ const ChatItem: React.FC<Props> = ({
           </div>
           <div>
             <h2 className="lg:font-bold text-sm lg:text-md text-ellipsis">
-              {chat.name}
+              {getChatName}
             </h2>
             <p className="text-sm hidden lg:block text-gray-500 text-ellipsis">
               {formatTimestamp(chat.updatedAt)}

@@ -1,3 +1,4 @@
+import { UserDocument } from "./../../../../backend/src/models/v1/User/userModel";
 import { apiClient } from "@/config/apiClient";
 import { errorHandler } from "@/utils/error/errorHandler";
 import { ErrorResponse, ApiResponse, Pagination } from "@/utils/error/types";
@@ -8,7 +9,7 @@ export interface Chat {
   creator: string;
   type: string;
   messages: any[]; // You can define a type for messages if needed
-  participants: string[];
+  participants: string[] | UserDocument[];
   createdAt: string;
   updatedAt: string;
   __v: number;
