@@ -7,9 +7,17 @@ interface IAccountProviderProps {
   children: React.ReactNode;
 }
 
+interface accountInterface {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
 // Remove ReturnType usage
 interface AccountContextProps {
-  account: null | undefined;
+  account: null | undefined | accountInterface;
   loggedInUserId: string | undefined;
   setAccount: React.Dispatch<React.SetStateAction<null | undefined>>;
 }

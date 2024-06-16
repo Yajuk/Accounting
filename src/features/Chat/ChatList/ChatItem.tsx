@@ -22,6 +22,7 @@ const ChatItem: React.FC<Props> = ({
   setActiveChat,
 }) => {
   const isActive = chat._id === activeChat;
+  console.log(chat);
   return (
     <div
       className={`flex cursor-pointer focus:bg-gray-100 items-center justify-between border lg:border-0 lg:m-0  m-2 rounded-sm lg:rounded-none  lg:border-b border-gray-200 py-4 ${isActive ? "bg-gray-100" : ""}`}
