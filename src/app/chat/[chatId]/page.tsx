@@ -5,7 +5,7 @@ interface Props {
     chatId: string;
   };
 }
-const ChatPage = ({ params }: Props) => {
+const ChatPage = async ({ params }: Props) => {
   return <MainChat chatId={params.chatId} />;
 };
 

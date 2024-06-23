@@ -14,7 +14,8 @@ const AllProviders = ({ children }: any) => {
         <AppRouterCacheProvider>
           <StyledEngineProvider injectFirst>
             <ThemeProviderWrapper>
-              <PageLayout>{children}</PageLayout>
+              {/* <PageLayout>{children}</PageLayout> */}
+              {children}
             </ThemeProviderWrapper>
           </StyledEngineProvider>
         </AppRouterCacheProvider>

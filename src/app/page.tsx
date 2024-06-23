@@ -7,8 +7,8 @@ export default function Home() {
         <Link href="/chat" className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold">Chat</h2>
         </Link>
-        <Link href="/transactions" className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold">Transactions</h2>
+        <Link href="/product" className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold">Product</h2>
         </Link>
       </div>
     </main>

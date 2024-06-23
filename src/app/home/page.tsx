@@ -9,10 +9,10 @@ const Home = async () => {
         <h2 className="text-xl font-semibold">Accounts</h2>
       </Link>
       <Link
-        href="/transactions"
+        href="/product"
         className="bg-white p-6 rounded-lg shadow-md flex items-center justify-center transition duration-300 ease-in-out transform hover:scale-105"
       >
-        <h2 className="text-xl font-semibold">Transactions</h2>
+        <h2 className="text-xl font-semibold">Product</h2>
       </Link>
     </div>
   );

@@ -4,7 +4,7 @@ import { error } from "console";
 const BASE_URL = process.env.NEXT_PUBLIC_BRAND_URL;
 import { ErrorResponse, SuccessResponse } from "@/utils/error/types";
 import { errorHandler } from "@/utils/error/errorHandler";
-import { getAccessToken } from "@/utils/localStorage";
+import { getAccessToken, logOut } from "@/utils/localStorage";
 
 const defaultHeaders = {
   "Cache-Control": "no-cache",
