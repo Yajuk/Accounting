@@ -3,9 +3,8 @@ import { StyledEngineProvider } from "@mui/material";
 
 import { AccountProvider } from "./accountProvider";
 import ThemeProviderWrapper from "@/components/theme/ThemeProvider";
-import PageLayout from "@/components/Layout/PageLayout";
-import { Chat } from "@mui/icons-material";
 import { ChatProvider } from "./ChatProvider";
+import PageLayout from "@/components/Layout/PageLayout";
 
 const AllProviders = ({ children }: any) => {
   return (
@@ -14,8 +13,7 @@ const AllProviders = ({ children }: any) => {
         <AppRouterCacheProvider>
           <StyledEngineProvider injectFirst>
             <ThemeProviderWrapper>
-              {/* <PageLayout>{children}</PageLayout> */}
-              {children}
+              <PageLayout>{children}</PageLayout>
             </ThemeProviderWrapper>
           </StyledEngineProvider>
         </AppRouterCacheProvider>

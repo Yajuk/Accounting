@@ -1,7 +1,17 @@
-import { UserDocument } from "./../../../../backend/src/models/v1/User/userModel";
 import { apiClient } from "@/config/apiClient";
-import { errorHandler } from "@/utils/error/errorHandler";
-import { ErrorResponse, ApiResponse, Pagination } from "@/utils/error/types";
+import { ApiResponse } from "@/utils/error/types";
+
+export interface UserDocument {
+  name: string;
+  id: string;
+  email: {
+    type: string;
+    required: true;
+    unique: [true, "This Email is already taken"];
+  };
+  password: string;
+  roles: string[];
+}
 
 export interface Chat {
   _id: string;

@@ -24,14 +24,6 @@ const PageLayout = ({ children }: any) => {
       router.replace(pathName);
     }
   }, [account]);
-  return (
-    <Box>
-      <header className="w-full z-50 bg-black h-16 fixed text-white flex items-center justify-center">
-        Welcome {userName}
-      </header>
-
-      {children}
-    </Box>
-  );
+  return <Box>{children}</Box>;
 };
 export default PageLayout;

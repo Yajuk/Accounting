@@ -1,5 +1,4 @@
 import ResponsiveAppBar from "@/components/ui/AppBar/Appbar";
-import App from "next/app";
 
 const pages = [
   { name: "Product", link: "/product/list" },
