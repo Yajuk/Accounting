@@ -1,27 +1,12 @@
 import { apiClient } from "@/config/apiClient";
 import { SuccessResponse } from "@/utils/error/types";
-export interface IProductData {
-  name: string;
-  description: string;
-  price: number | string;
-  unit: "kg" | "gm" | "litre" | "ml" | "piece";
-  image: string;
-  category: string;
-  brand: string;
-}
-export interface IProductList {
-  currentPage: number;
-  nextPage: number | null;
-  totalPages: number;
-  data: IProductData[];
-}
-export interface IParams {
-  search?: string;
-  page?: number;
-  limit?: number;
-}
+import {
+  IParams,
+  IProductPayload,
+  IProductList,
+} from "@/utils/types/productTypes";
 
-export const createProduct = async (data: IProductData) => {
+export const createProduct = async (data: IProductPayload) => {
   try {
     const response = await apiClient({
       url: "/products",

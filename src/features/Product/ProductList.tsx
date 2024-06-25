@@ -1,106 +1,59 @@
+// components/ProductList.tsx
 "use client";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { Box, Card } from "@mui/material";
+import { GridToolbar, GridFilterModel } from "@mui/x-data-grid";
 import DataTable from "@/components/ui/DataTable/DataTable";
-import * as ProductService from "@/services/product/productService";
+
+import { IPaginationModel, ISearchFilter } from "@/utils/types/productTypes";
 import { debounce } from "@/utils/debounce";
-import { Card } from "@mui/material";
-import { GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { columns, styles } from "@/config/productTableConfig";
+import SearchFilter from "./SearchFilters";
+import useProducts from "@/hooks/useProducts";
 
 const ProductList = () => {
-  const [products, setProducts] = useState<ProductService.IProductData[]>([]);
-  const [paginationModel, setPaginationModel] = useState({
+  const [paginationModel, setPaginationModel] = useState<IPaginationModel>({
     page: 0,
     pageSize: 10,
   });
-  const [totalCount, setTotalCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [search, setSearch] = useState("");
-  const getProducts = async () => {
-    try {
-      setIsLoading(true);
-      const resp = await ProductService.getProducts({
-        page: paginationModel.page + 1,
-        limit: paginationModel.pageSize,
-        search: search,
-      });
 
-      if (resp.statusCode === 200) {
-        setProducts(resp.data.data);
-        setTotalCount(resp.data.totalCount);
-      }
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [search, setSearch] = useState<string>("");
+  const [searchFilters, setSearchFilters] = useState<ISearchFilter>({});
+  const { products, totalCount, isLoading } = useProducts(
+    paginationModel,
+    search,
+    searchFilters,
+  );
 
-  useEffect(() => {
-    getProducts();
-  }, [paginationModel.page, paginationModel.pageSize, search]);
-
-  const columns: GridColDef[] = [
-    // { field: "_id", headerName: "ID", width: 120, type: "string" },
-    { field: "name", headerName: "Name", width: 150, type: "string" },
-    {
-      field: "brand",
-      headerName: "Brand",
-      type: "string",
-      valueGetter: (value) => {
-        return value.name;
-      },
-    },
-    {
-      field: "category",
-      headerName: "Category",
-      type: "string",
-      valueGetter: (value) => {
-        return value.name;
-      },
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      type: "string",
-    },
-    { field: "price", headerName: "Price", width: 100, type: "number" },
-    {
-      field: "createdAt",
-      headerName: "Created At",
-      type: "string",
-      valueFormatter: (value) => {
-        return new Date(value).toLocaleString();
-      },
-    },
-    {
-      field: "updatedAt",
-      headerName: "Updated At",
-      type: "string",
-    },
-  ];
-
-  const rowCountRef = useRef(totalCount || 0);
-
-  const rowCount = useMemo(() => {
+  const rowCountRef = useRef<number>(totalCount || 0);
+  const rowCount = useMemo<number>(() => {
     if (totalCount !== undefined) {
       rowCountRef.current = totalCount;
     }
     return rowCountRef.current;
   }, [totalCount]);
 
-  const onSearchChange = useCallback((search: string) => {
-    setSearch(search);
-  }, []);
-  const debouncedSearch = debounce(onSearchChange, 300);
-  const onFilterChange = useCallback((filterModel) => {
-    if (filterModel.quickFilterValues.length > 0) {
-      debouncedSearch(filterModel.quickFilterValues[0]);
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      setSearch(value);
+    }, 300),
+    [],
+  );
+
+  const onFilterChange = useCallback((filterModel: GridFilterModel) => {
+    if (filterModel?.quickFilterValues) {
+      setSearch(filterModel.quickFilterValues[0]);
     }
   }, []);
 
+  const onSearchFilterChange = useCallback((newFilters: ISearchFilter) => {
+    setSearchFilters(newFilters);
+  }, []);
+
   return (
-    <Card className="m-4">
+    <Card className="m-4 flex">
       <DataTable
+        sx={styles}
         getRowId={(row) => row._id}
         columns={columns}
         rows={products}
@@ -120,10 +73,15 @@ const ProductList = () => {
         slotProps={{
           toolbar: {
             showQuickFilter: true,
+            quickFilterProps: {
+              debounceMs: 300,
+            },
+            showExport: false,
           },
         }}
         onFilterModelChange={onFilterChange}
         autosizeOnMount
+        autoHeight
         autosizeOptions={{
           includeOutliers: true,
           includeHeaders: true,
@@ -131,6 +89,9 @@ const ProductList = () => {
           expand: true,
         }}
       />
+      <Box className="w-[20%] p-4">
+        <SearchFilter onFilterChange={onSearchFilterChange} />
+      </Box>
     </Card>
   );
 };

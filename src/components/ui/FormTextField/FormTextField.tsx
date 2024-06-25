@@ -11,6 +11,7 @@ interface FormFieldProps<T> {
   inputProps?: InputBaseComponentProps;
   multiline?: boolean;
   rows?: number;
+  className?: string;
 }
 
 const FormField = <T extends FieldValues>({
@@ -19,13 +20,14 @@ const FormField = <T extends FieldValues>({
   label,
   type = "text",
   inputProps,
+  className = "",
   ...rest
 }: FormFieldProps<T>) => (
   <Controller
     name={name as string}
     control={control}
     render={({ field, fieldState: { error } }) => (
-      <FormControl className="form-control" fullWidth>
+      <FormControl className={"form-control " + className} fullWidth>
         <TextField
           label={label}
           type={type}

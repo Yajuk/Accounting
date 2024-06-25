@@ -12,7 +12,7 @@ import CustomSnackbar, {
 import { useState } from "react";
 import FormSelect from "@/components/ui/FomSelect/FormSelect";
 const UNITS = ["kg", "gm", "litre", "ml", "piece"];
-const loginFormSchema = z.object({
+const productSchema = z.object({
   name: z
     .string()
     .min(3, { message: "Product name must be at least 3 characters long" }),
@@ -33,7 +33,7 @@ const loginFormSchema = z.object({
     _id: z.string(),
   }),
 });
-type IFormInput = z.infer<typeof loginFormSchema>;
+type IFormInput = z.infer<typeof productSchema>;
 
 const CreateProductForm = () => {
   const [open, setOpen] = useState(false);
@@ -60,7 +60,7 @@ const CreateProductForm = () => {
       unit: "litre",
       price: 0,
     },
-    resolver: zodResolver(loginFormSchema),
+    resolver: zodResolver(productSchema),
   });
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -110,12 +110,6 @@ const CreateProductForm = () => {
                 />
               </Grid>
               <Grid item md={2}>
-                {/* <FormTextField
-                  name={"unit"}
-                  control={control}
-                  label={"Unit"}
-                  helperText={JSON.stringify(UNITS)}
-                /> */}
                 <FormSelect
                   control={control}
                   options={[

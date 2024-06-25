@@ -21,9 +21,16 @@ interface IProps {
   control: any; // Object from useForm hook
   name: string; // Name of the field in the form
   setValue: any; // Function to set the value of the field in the form
+  className?: string; // Class name to be applied to the component
 }
 
-const CategoryDropdown = ({ type, control, name, setValue }: IProps) => {
+const CategoryDropdown = ({
+  type,
+  control,
+  name,
+  setValue,
+  className = "",
+}: IProps) => {
   const [options, setOptions] = useState<IOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -63,6 +70,7 @@ const CategoryDropdown = ({ type, control, name, setValue }: IProps) => {
       render={({ field, fieldState: { error } }) => (
         <Autocomplete
           {...field}
+          className={className}
           options={[{ name: "Create product" }, ...options]}
           loading={loading}
           getOptionLabel={(option) => option?.name || ""}
