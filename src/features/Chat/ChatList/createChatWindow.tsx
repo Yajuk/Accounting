@@ -100,7 +100,6 @@ const CreateChatWindow = () => {
             const formJson = Object.fromEntries((formData as any).entries());
             const name = formJson.name;
             if (selectedUsers.length > 0 && name) {
-              debugger;
               onCreateGroupChat(selectedUsers, name);
             }
           },

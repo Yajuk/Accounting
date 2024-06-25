@@ -9,6 +9,8 @@ interface FormFieldProps<T> {
   type?: string;
   helperText?: string;
   inputProps?: InputBaseComponentProps;
+  multiline?: boolean;
+  rows?: number;
 }
 
 const FormField = <T extends FieldValues>({
@@ -23,12 +25,12 @@ const FormField = <T extends FieldValues>({
     name={name as string}
     control={control}
     render={({ field, fieldState: { error } }) => (
-      <FormControl className="form-control">
+      <FormControl className="form-control" fullWidth>
         <TextField
           label={label}
           type={type}
           variant="outlined"
-          className="mb-4"
+          //className="mb-4"
           error={!!error}
           helperText={error ? error.message : ""}
           {...field}

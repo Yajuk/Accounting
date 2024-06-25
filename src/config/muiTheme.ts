@@ -15,9 +15,38 @@ export const themeOptions: ThemeOptions = createTheme({
   typography: {
     button: {
       fontFamily: "Inter",
-      fontSize: "1.2rem",
     },
   },
+
+  components: {
+    MuiButton: {
+      defaultProps: {
+        size: "small", // Set default button size to "small"
+      },
+    },
+    MuiFormControl: {
+      defaultProps: {
+        size: "small", // Set default form control size to "small" (if applicable)
+      },
+    },
+    MuiInputLabel: {
+      defaultProps: {
+        size: "small", // Adjust font size for labels
+      },
+    },
+
+    MuiInputBase: {
+      defaultProps: {
+        size: "small", // Adjust font size for inputs
+      },
+    },
+    MuiFormHelperText: {
+      defaultProps: {
+        size: "small", // Adjust font size for helper text
+      },
+    },
+  },
+
   shape: {
     borderRadius: 4,
   },
