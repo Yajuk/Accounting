@@ -16,11 +16,7 @@ type DataTableType = JSX.IntrinsicAttributes &
   > & { pagination?: true | undefined } & RefAttributes<HTMLDivElement>;
 
 const DataTable = (props: DataTableType) => {
-  return (
-    <div style={{ height: 300, width: "100%" }}>
-      <DataGrid {...props} />
-    </div>
-  );
+  return <DataGrid {...props} />;
 };
 
 export default DataTable;
