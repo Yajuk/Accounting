@@ -8,6 +8,7 @@ export const columns: GridColDef[] = [
     field: "brand",
     headerName: "Brand",
     type: "string",
+    editable: true,
     valueGetter: (value) => {
       return value.name;
     },
@@ -25,19 +26,22 @@ export const columns: GridColDef[] = [
     headerName: "Description",
     type: "string",
   },
-  { field: "price", headerName: "Price", width: 100, type: "number" },
+  { field: "price", headerName: "MRP", width: 100, type: "number" },
   {
     field: "createdAt",
     headerName: "Created At",
     type: "string",
     valueFormatter: (value) => {
-      return new Date(value).toLocaleString();
+      return new Date(value).toLocaleDateString();
     },
   },
   {
     field: "updatedAt",
     headerName: "Updated At",
     type: "string",
+    valueFormatter: (value) => {
+      return new Date(value).toLocaleDateString();
+    },
   },
 ];
 
