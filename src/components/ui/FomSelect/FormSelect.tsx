@@ -21,7 +21,7 @@ const FormSelect = <T extends FieldValues>({
     control={control}
     render={({ field, fieldState: { error } }) => (
       <FormControl className="form-control" fullWidth>
-        <InputLabel>{label}</InputLabel>
+        <InputLabel data-testId={label}>{label}</InputLabel>
         <Select
           {...field}
           error={!!error}

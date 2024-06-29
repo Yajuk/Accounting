@@ -12,7 +12,7 @@ import CustomSnackbar, {
 import { useState } from "react";
 import FormSelect from "@/components/ui/FomSelect/FormSelect";
 const UNITS = ["kg", "gm", "litre", "ml", "piece"];
-const productSchema = z.object({
+export const productSchema = z.object({
   name: z
     .string()
     .min(3, { message: "Product name must be at least 3 characters long" }),
@@ -94,7 +94,7 @@ const CreateProductForm = () => {
     setSeverity(severity);
     setOpen(true);
   };
-
+  console.log("errors", errors);
   return (
     <>
       <Card>
@@ -165,6 +165,7 @@ const CreateProductForm = () => {
                   color="primary"
                   className="text-white py-2 px-4 my-4 rounded"
                   size="medium"
+                  data-testId="create-product-button"
                 >
                   Create Product
                 </Button>
