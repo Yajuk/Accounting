@@ -1,12 +1,5 @@
 import "@testing-library/jest-dom";
-import {
-  render,
-  screen,
-  fireEvent,
-  renderHook,
-  debug,
-} from "@testing-library/react";
-import { userEve } from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 import CreateProductForm from "../ProductCreate";
 import { createProduct } from "@/services/product/productService";
 import { getCategories } from "@/services/product/CategoryService";
@@ -63,7 +56,11 @@ describe("CreateProductForm", () => {
       target: { value: "Test description" },
     });
 
-    fireEvent.click(screen.getByRole("combobox", { name: /category/i }));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0)); // Wait for useEffect to run
+    });
+
+    expect(mockgetCategories).toHaveBeenCalledTimes(1);
 
     const submitButton = screen.getByTestId("create-product-button");
 
@@ -80,6 +77,6 @@ describe("CreateProductForm", () => {
     const priceError = await screen.findByText("Invalid");
     expect(priceError).toBeInTheDocument();
 
-    screen.logTestingPlaygroundURL();
+    // screen.logTestingPlaygroundURL();
   });
 });
