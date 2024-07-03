@@ -75,6 +75,7 @@ const CategoryDropdown = ({
           loading={loading}
           getOptionLabel={(option) => option?.name || ""}
           onChange={(_, value) => onSelectOption(value)}
+          isOptionEqualToValue={(option, value) => option?._id === value?._id}
           renderOption={(props, option) =>
             option?.name === "Create product" ? (
               <Button color="primary" size="small" fullWidth>
