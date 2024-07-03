@@ -1,5 +1,9 @@
 {
-  "extends": ["next/core-web-vitals", "eslint-plugin-import"],
+  "extends": [
+    "next/core-web-vitals",
+    "eslint-plugin-import",
+    "plugin:storybook/recommended"
+  ],
   "rules": {
     "no-unused-vars": "error"
   }
