@@ -5,6 +5,8 @@ import { SocketProvider } from "./socketContext";
 import { logOut } from "@/utils/localStorage";
 import { ErrorResponse } from "@/utils/error/types";
 import { formatTimestamp } from "@/utils/date";
+import { useAccount } from "./accountProvider";
+import { useRouter } from "next/navigation";
 interface IChatProviderProps {
   children: React.ReactNode;
 }
@@ -22,6 +24,8 @@ export const ChatProvider = ({ children }: IChatProviderProps) => {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [chats, setChats] = useState<Chat[]>([]);
+  const { loggedInUserId } = useAccount();
+  const router = useRouter();
   const getChatList = async () => {
     try {
       const response = await chatList({
@@ -43,12 +47,15 @@ export const ChatProvider = ({ children }: IChatProviderProps) => {
     }
   };
   useEffect(() => {
+    if (!loggedInUserId) {
+      router.push("/login");
+    }
     try {
       getChatList();
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [loggedInUserId]);
   return (
     <SocketProvider>
       <ChatContext.Provider
