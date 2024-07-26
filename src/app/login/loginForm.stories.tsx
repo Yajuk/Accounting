@@ -9,6 +9,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 const meta = {
   component: LoginForm,
   title: "Components/LoginForm",
+  tags: ["autodocs"],
   decorators: [
     (Story) => (
       <AccountProvider>
@@ -28,5 +29,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const LoginFormDefault: Story = {
-  args: {},
+  args: {
+    password: "<PASSWORD>",
+  },
+  parameters: {
+    controls: { expanded: true },
+  },
 };

@@ -102,14 +102,14 @@ const CreateProductForm = () => {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
-              <Grid item md={2}>
+              <Grid item md={2} xs={12}>
                 <FormTextField
                   name={"name"}
                   control={control}
                   label={"Product Name"}
                 />
               </Grid>
-              <Grid item md={2}>
+              <Grid item md={2} xs={12}>
                 <FormSelect
                   control={control}
                   options={[
@@ -123,7 +123,7 @@ const CreateProductForm = () => {
                   label="Unit"
                 />
               </Grid>
-              <Grid item md={2}>
+              <Grid item md={2} xs={12}>
                 <FormTextField
                   type="number"
                   name={"price"}
@@ -131,7 +131,7 @@ const CreateProductForm = () => {
                   label={"Price"}
                 />
               </Grid>
-              <Grid item md={3}>
+              <Grid item md={3} xs={12}>
                 <CategoryDropdown
                   setValue={setValue}
                   type="category"
@@ -139,7 +139,7 @@ const CreateProductForm = () => {
                   name="category"
                 />
               </Grid>
-              <Grid item md={3}>
+              <Grid item md={3} xs={12}>
                 <CategoryDropdown
                   setValue={setValue}
                   type="brand"
@@ -147,7 +147,7 @@ const CreateProductForm = () => {
                   name="brand"
                 />
               </Grid>
-              <Grid item lg={12}>
+              <Grid item lg={12} xs={12}>
                 <FormTextField
                   name={"description"}
                   control={control}
