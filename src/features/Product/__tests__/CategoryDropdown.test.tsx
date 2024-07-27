@@ -1,15 +1,14 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import CategoryDropdown from "../CtaegoryDropdown";
+import CategoryDropdown from "../CategoryDropdown/CtaegoryDropdown";
 import { getCategories } from "@/services/product/CategoryService";
 import { getBrands } from "@/services/product/brandService";
 import { act } from "react-dom/test-utils";
 import { useForm } from "react-hook-form";
-import exp from "constants";
 
-jest.mock("../../../../services/product/CategoryService");
-jest.mock("../../../../services/product/brandService");
+jest.mock("../../../services/product/CategoryService");
+jest.mock("../../../services/product/brandService");
 
 const mockSetValue = jest.fn();
 

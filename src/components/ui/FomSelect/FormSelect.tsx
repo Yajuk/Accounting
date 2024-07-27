@@ -1,8 +1,14 @@
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { Controller, FieldValues } from "react-hook-form";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
-interface FormSelectProps<T> {
-  name: keyof T;
+export interface FormSelectProps<T> {
+  name: string;
   control: any; // Type for 'control' from react-hook-form
   label: string;
   options: string[] | { value: string; label: string }[]; // Array of string values or objects with value and label
@@ -25,10 +31,13 @@ const FormSelect = <T extends FieldValues>({
         <Select
           {...field}
           error={!!error}
-          value={field.value || defaultValue}
+          //value={field.value || defaultValue}
           onChange={field.onChange}
           label={label}
         >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
           {options.map((option) => (
             <MenuItem
               key={typeof option === "string" ? option : option.value}
@@ -38,6 +47,12 @@ const FormSelect = <T extends FieldValues>({
             </MenuItem>
           ))}
         </Select>
+
+        {error && (
+          <FormHelperText sx={{ color: error.message ? "#d32f2f" : "" }}>
+            {error.message}
+          </FormHelperText>
+        )}
       </FormControl>
     )}
   />

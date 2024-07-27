@@ -2,8 +2,8 @@
 
 import { Controller, FieldValues } from "react-hook-form";
 import { TextField, FormControl, InputBaseComponentProps } from "@mui/material";
-interface FormFieldProps<T> {
-  name: keyof T;
+export interface FormFieldProps<T> {
+  name: string;
   control: any; // Type for 'control' from react-hook-form
   label: string;
   type?: string;

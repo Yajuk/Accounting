@@ -2,7 +2,7 @@
 import React, { use, useState } from "react";
 import { Button, Card, TextField } from "@mui/material";
 import { ISearchFilter } from "@/utils/types/productTypes";
-import CategoryDropdown from "@/components/common/CategoryDropdown/CtaegoryDropdown";
+import CategoryDropdown from "@/features/Product/CategoryDropdown/CtaegoryDropdown";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

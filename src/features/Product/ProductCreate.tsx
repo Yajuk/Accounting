@@ -4,7 +4,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormTextField from "@/components/ui/FormTextField/FormTextField";
-import CategoryDropdown from "@/components/common/CategoryDropdown/CtaegoryDropdown";
+import CategoryDropdown from "@/features/Product/CategoryDropdown/CtaegoryDropdown";
 import { createProduct } from "@/services/product/productService";
 import CustomSnackbar, {
   severity,
