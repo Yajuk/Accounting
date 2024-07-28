@@ -1,16 +1,15 @@
 "use client";
-import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import CustomSnackbar, {
+  useSnackBar,
+} from "@/components/ui/CustomSnackbar/CustomSnackbar";
+import FormSelect from "@/components/ui/FomSelect/FormSelect";
 import FormTextField from "@/components/ui/FormTextField/FormTextField";
 import CategoryDropdown from "@/features/Product/CategoryDropdown/CtaegoryDropdown";
 import { createProduct } from "@/services/product/productService";
-import CustomSnackbar, {
-  severity,
-} from "@/components/ui/CustomSnackbar/CustomSnackbar";
-import { useState } from "react";
-import FormSelect from "@/components/ui/FomSelect/FormSelect";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 const UNITS = ["kg", "gm", "litre", "ml", "piece"];
 export const productSchema = z.object({
   name: z
@@ -36,15 +35,9 @@ export const productSchema = z.object({
 type IFormInput = z.infer<typeof productSchema>;
 
 const CreateProductForm = () => {
-  const [open, setOpen] = useState(false);
-  const [snackbarMessage, setMessage] = useState("");
-  const [severity, setSeverity] = useState<severity>("success");
+  const { severity, snackbarMessage, open, handleClose, openSnackbar } =
+    useSnackBar();
 
-  const handleClose = () => {
-    snackbarMessage !== "" && setMessage("");
-    setSeverity("success");
-    setOpen(false);
-  };
   const {
     control,
     handleSubmit,
@@ -81,19 +74,15 @@ const CreateProductForm = () => {
         reset();
       }
     } catch (error: any) {
-      if (error) {
-        openSnackbar(error.errors.message, "error");
-      } else {
-        console.log("An unexpected error occurred. Please try again later.");
-      }
+      const errorMessage =
+        error?.errors?.[0]?.message ||
+        error?.errors?.message ||
+        "An unexpected error occurred. Please try again later.";
+      openSnackbar(errorMessage, "error");
+      console.error(errorMessage);
     }
   };
 
-  const openSnackbar = (message: string, severity: severity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setOpen(true);
-  };
   console.log("errors", errors);
   return (
     <>

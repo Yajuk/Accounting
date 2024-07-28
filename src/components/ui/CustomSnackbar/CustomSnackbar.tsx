@@ -1,6 +1,6 @@
 // CustomSnackbar.tsx
 
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Snackbar, Alert } from "@mui/material";
 
 export type severity = "success" | "error" | "warning" | "info";
@@ -32,6 +32,32 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
       <Alert severity={severity}>{message}</Alert>
     </Snackbar>
   );
+};
+
+export const useSnackBar = () => {
+  const [open, setOpen] = useState(false);
+  const [snackbarMessage, setMessage] = useState("");
+  const [severity, setSeverity] = useState<severity>("success");
+
+  const handleClose = useCallback(() => {
+    snackbarMessage !== "" && setMessage("");
+    setSeverity("success");
+    setOpen(false);
+  }, []);
+
+  const openSnackbar = (message: string, severity: severity) => {
+    setMessage(message);
+    setSeverity(severity);
+    setOpen(true);
+  };
+
+  return {
+    severity,
+    snackbarMessage,
+    open,
+    handleClose,
+    openSnackbar,
+  };
 };
 
 export default CustomSnackbar;

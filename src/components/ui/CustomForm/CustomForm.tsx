@@ -16,7 +16,7 @@ type UIFormFields =
   | Omit<FormFieldProps<string>, "control">
   | Omit<FormSelectProps<string>, "control">;
 
-type IField = UIFormFields & {
+export type IField = UIFormFields & {
   field: "text" | "select" | "combobox";
   defaultValue?: any;
 };
@@ -62,6 +62,7 @@ const CustomForm = <T extends z.ZodType<any, any>>({
 
   const onSubmitForm = async (data: z.infer<T>) => {
     console.log(data);
+    onSubmit(data);
   };
 
   const renderFormField = useCallback(
