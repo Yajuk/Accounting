@@ -5,9 +5,14 @@ import CustomSnackbar, {
 import FormSelect from "@/components/ui/FomSelect/FormSelect";
 import FormTextField from "@/components/ui/FormTextField/FormTextField";
 import CategoryDropdown from "@/features/Product/CategoryDropdown/CtaegoryDropdown";
-import { createProduct } from "@/services/product/productService";
+import {
+  createProduct,
+  getProductById,
+  updateProductById,
+} from "@/services/product/productService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 const UNITS = ["kg", "gm", "litre", "ml", "piece"];
@@ -34,7 +39,12 @@ export const productSchema = z.object({
 });
 type IFormInput = z.infer<typeof productSchema>;
 
-const CreateProductForm = () => {
+interface ICreateProductProps {
+  productId?: string;
+  onSuccess: () => void;
+}
+
+const CreateProductForm = ({ productId, onSuccess }: ICreateProductProps) => {
   const { severity, snackbarMessage, open, handleClose, openSnackbar } =
     useSnackBar();
 
@@ -59,19 +69,33 @@ const CreateProductForm = () => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     console.log("formValues", data);
     try {
-      const response = await createProduct({
-        name: data.name,
-        description: data.description || "",
-        unit: data.unit,
-        price: data.price,
-        category: data.category._id,
-        image: "",
-        brand: data.brand._id,
-      });
+      const response = await (productId
+        ? updateProductById(productId, {
+            name: data.name,
+            description: data.description || "",
+            unit: data.unit,
+            price: data.price,
+            category: data.category._id,
+            image: "",
+            brand: data.brand._id,
+          })
+        : createProduct({
+            name: data.name,
+            description: data.description || "",
+            unit: data.unit,
+            price: data.price,
+            category: data.category._id,
+            image: "",
+            brand: data.brand._id,
+          }));
       console.log("response", response);
       if (response.statusCode === 200) {
-        openSnackbar("Product created successfully", "success");
+        openSnackbar(
+          `Product ${productId ? "updated" : "created"} successfully`,
+          "success",
+        );
         reset();
+        onSuccess();
       }
     } catch (error: any) {
       const errorMessage =
@@ -82,6 +106,32 @@ const CreateProductForm = () => {
       console.error(errorMessage);
     }
   };
+
+  const getProductDetails = async (id: string) => {
+    try {
+      const response = await getProductById(id);
+      setValue("name", response.data.name);
+      setValue("description", response.data.description);
+      setValue("unit", response.data.unit);
+      setValue("price", response.data.price);
+      setValue("category", {
+        name: response.data.category.name,
+        description: response.data.category.description,
+        _id: response.data.category._id,
+      });
+      setValue("brand", {
+        name: response.data.brand.name,
+        description: response.data.brand.description,
+        _id: response.data.brand._id,
+      });
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (productId) {
+      getProductDetails(productId);
+    }
+  }, []);
 
   console.log("errors", errors);
   return (
@@ -156,7 +206,7 @@ const CreateProductForm = () => {
                   size="medium"
                   data-testId="create-product-button"
                 >
-                  Create Product
+                  {productId ? "Update" : "Create Product"}
                 </Button>
               </Grid>
             </Grid>

@@ -1,11 +1,11 @@
 // hooks/useProducts.ts
-import { useCallback, useEffect, useState } from "react";
 import * as ProductService from "@/services/product/productService";
 import {
   IPaginationModel,
   IProductPayload,
   ISearchFilter,
 } from "@/utils/types/productTypes";
+import { useCallback, useEffect, useState } from "react";
 
 const useProducts = (
   paginationModel: IPaginationModel,
@@ -42,11 +42,13 @@ const useProducts = (
     }
   }, [paginationModel, search, searchFilters]);
 
+  const reFetchProducts = () => {
+    getProducts();
+  };
   useEffect(() => {
     getProducts();
   }, [getProducts]);
-
-  return { products, totalCount, isLoading };
+  return { products, totalCount, isLoading, reFetchProducts };
 };
 
 export default useProducts;

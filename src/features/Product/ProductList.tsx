@@ -1,30 +1,39 @@
 // components/ProductList.tsx
 "use client";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Box, Card } from "@mui/material";
-import { GridToolbar, GridFilterModel } from "@mui/x-data-grid";
 import DataTable from "@/components/ui/DataTable/DataTable";
+import { Box, Button, Card } from "@mui/material";
+import {
+  GridFilterModel,
+  GridRenderCellParams,
+  GridToolbar,
+} from "@mui/x-data-grid";
+import { useCallback, useMemo, useRef, useState } from "react";
 
-import { IPaginationModel, ISearchFilter } from "@/utils/types/productTypes";
-import { debounce } from "@/utils/debounce";
+import MuiModal, { useModal } from "@/components/ui/FormTextField/MuiModal";
 import { columns, styles } from "@/config/productTableConfig";
-import SearchFilter from "./SearchFilters";
 import useProducts from "@/hooks/useProducts";
+import { debounce } from "@/utils/debounce";
+import { IPaginationModel, ISearchFilter } from "@/utils/types/productTypes";
+import CreateProductForm from "./ProductCreate";
+import SearchFilter from "./SearchFilters";
 
 const ProductList = () => {
   const [paginationModel, setPaginationModel] = useState<IPaginationModel>({
     page: 0,
     pageSize: 10,
   });
+  const { handleOpen, handleClose, open } = useModal();
 
   const [search, setSearch] = useState<string>("");
   const [searchFilters, setSearchFilters] = useState<ISearchFilter>({});
-  const { products, totalCount, isLoading } = useProducts(
+  const { products, totalCount, isLoading, reFetchProducts } = useProducts(
     paginationModel,
     search,
     searchFilters,
   );
-
+  const [currentEditRecord, setCurrentEditRecord] = useState<
+    Record<string, any> | undefined
+  >(undefined);
   const rowCountRef = useRef<number>(totalCount || 0);
   const rowCount = useMemo<number>(() => {
     if (totalCount !== undefined) {
@@ -50,12 +59,39 @@ const ProductList = () => {
     setSearchFilters(newFilters);
   }, []);
 
+  const onSuccess = useCallback(() => {
+    handleClose();
+    setCurrentEditRecord(undefined);
+    reFetchProducts();
+  }, []);
   return (
     <Card className="m-4 flex">
       <DataTable
         sx={styles}
         getRowId={(row) => row._id}
-        columns={columns}
+        columns={[
+          ...columns,
+          {
+            field: "actions",
+            headerName: "Actions",
+            renderCell: (params: GridRenderCellParams) => {
+              return (
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      setCurrentEditRecord(params.row);
+                      handleOpen();
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </Box>
+              );
+            },
+          },
+        ]}
         rows={products}
         rowCount={rowCount}
         loading={isLoading}
@@ -90,7 +126,23 @@ const ProductList = () => {
         }}
       />
       <Box className="w-[20%] p-4">
+        <Button onClick={handleOpen}>Create Product</Button>
         <SearchFilter onFilterChange={onSearchFilterChange} />
+        {open && (
+          <MuiModal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box>
+              <CreateProductForm
+                productId={currentEditRecord?._id}
+                onSuccess={onSuccess}
+              />
+            </Box>
+          </MuiModal>
+        )}
       </Box>
     </Card>
   );
