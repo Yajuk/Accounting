@@ -1,23 +1,36 @@
 import React, { useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
+import z, { BRAND } from "zod";
 import FormTextField, { FormFieldProps } from "../FormTextField/FormTextField";
 import FormSelect, { FormSelectProps } from "../FomSelect/FormSelect";
+import CategoryDropdown, {
+  IProps,
+} from "@/features/Product/CategoryDropdown/CtaegoryDropdown";
 import { Grid, RegularBreakpoints, GridSpacing, Button } from "@mui/material";
 
 export const FieldTypes = {
   TEXT: "text",
   SELECT: "select",
   COMBOBOX: "combobox",
+  PRODUCT_DD: "product-dd",
+  CATEGORY_DD: "category-dd",
+  BRAND_DD: "brand-dd",
 };
 
 type UIFormFields =
   | Omit<FormFieldProps<string>, "control">
-  | Omit<FormSelectProps<string>, "control">;
+  | Omit<FormSelectProps<string>, "control">
+  | Omit<IProps, "control">;
 
 export type IField = UIFormFields & {
-  field: "text" | "select" | "combobox";
+  field:
+    | "text"
+    | "select"
+    | "combobox"
+    | "product-dd"
+    | "category-dd"
+    | "brand-dd";
   defaultValue?: any;
 };
 
@@ -40,6 +53,19 @@ const generateDefaultValues = (fields: IField[]) => {
         acc[field.name as string] = field.defaultValue || "";
       }
 
+      if (field.field === FieldTypes.COMBOBOX) {
+        acc[field.name as string] = field.defaultValue || "";
+      }
+      if (field.field === FieldTypes.PRODUCT_DD) {
+        acc[field.name as string] = field.defaultValue || "";
+      }
+      if (field.field === FieldTypes.CATEGORY_DD) {
+        acc[field.name as string] = field.defaultValue || {};
+      }
+      if (field.field === FieldTypes.BRAND_DD) {
+        acc[field.name as string] = field.defaultValue || {};
+      }
+
       return acc;
     },
     {} as Record<string, any>,
@@ -55,7 +81,7 @@ const CustomForm = <T extends z.ZodType<any, any>>({
   schema,
   onSubmit,
 }: IFormProps<T>) => {
-  const { handleSubmit, control, reset } = useForm({
+  const { handleSubmit, control, reset, setValue } = useForm({
     defaultValues: generateDefaultValues(fields),
     resolver: zodResolver(schema),
   });
@@ -82,6 +108,24 @@ const CustomForm = <T extends z.ZodType<any, any>>({
               name={name as string}
               label={label}
               options={options}
+            />
+          );
+        case FieldTypes.CATEGORY_DD:
+          return (
+            <CategoryDropdown
+              setValue={setValue}
+              type="category"
+              control={control}
+              name="category"
+            />
+          );
+        case FieldTypes.BRAND_DD:
+          return (
+            <CategoryDropdown
+              setValue={setValue}
+              type="brand"
+              control={control}
+              name="brand"
             />
           );
         default:

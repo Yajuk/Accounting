@@ -56,7 +56,6 @@ const ProductDropdown = ({
   };
 
   const onSelectOption = (data: IOption | null) => {
-    debugger;
     if (data?.name === "Create product") {
       setValue(name, null); // Clear form value
       //alert("Not implemented yet!");

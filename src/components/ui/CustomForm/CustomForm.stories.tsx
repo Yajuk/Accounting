@@ -12,6 +12,16 @@ type Story = StoryObj<typeof meta>;
 const schema = z.object({
   search: z.string().min(1, { message: "Search field is required" }),
   dp: z.string().min(1, { message: "required" }),
+  category: z.object({
+    name: z.string(),
+    description: z.string().optional(),
+    _id: z.string(),
+  }),
+  // brand: z.object({
+  //   name: z.string(),
+  //   description: z.string().optional(),
+  //   _id: z.string(),
+  // }),
 });
 export const CustomFormDefault: Story = {
   args: {
@@ -35,6 +45,11 @@ export const CustomFormDefault: Story = {
             value: "op2",
           },
         ],
+      },
+      {
+        field: "category-dd",
+        name: "category",
+        label: "Category",
       },
     ],
     breakpoints: {
