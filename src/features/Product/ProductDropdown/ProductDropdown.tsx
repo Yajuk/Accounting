@@ -11,7 +11,7 @@ import {
   CircularProgress,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import MuiModal from "@/components/ui/FormTextField/MuiModal";
 import CreateProductForm from "./ProductCreate";
 
@@ -68,6 +68,12 @@ const ProductDropdown = ({
   const onSearchProduct = debounce((searchTerm: string) => {
     fetchData(searchTerm);
   }, 300);
+
+  const onSuccessCreateNewProduct = useCallback(() => {
+    handleClose();
+    const searchTerm = "";
+    fetchData(searchTerm);
+  }, []);
 
   return (
     <>
@@ -137,7 +143,7 @@ const ProductDropdown = ({
         aria-describedby="modal-modal-description"
       >
         <Box>
-          <CreateProductForm />
+          <CreateProductForm onSuccess={onSuccessCreateNewProduct} />
         </Box>
       </MuiModal>
     </>
