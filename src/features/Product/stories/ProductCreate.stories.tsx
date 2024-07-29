@@ -14,5 +14,6 @@ export const Default: StoryObj = {
 export const WithInitialValues: StoryObj = {
   args: {
     productId: "66a4dc890703d95b011e62f4",
+    onSubmit: () => {},
   },
 };

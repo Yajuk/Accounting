@@ -10,6 +10,7 @@ import {
   getProductById,
   updateProductById,
 } from "@/services/product/productService";
+import { IProductPayload } from "@/utils/types/productTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
 import { useEffect } from "react";
@@ -22,6 +23,14 @@ export const productSchema = z.object({
     .min(3, { message: "Product name must be at least 3 characters long" }),
   description: z.string().optional(),
   unit: z.enum(["kg", "gm", "litre", "ml", "piece"]),
+  hsn: z
+    .number()
+    .positive()
+    .or(z.string().regex(/^\d+(\.\d{1,2})?$/)),
+  gst: z
+    .number()
+    .positive()
+    .or(z.string().regex(/^\d+(\.\d{1,2})?$/)),
   price: z
     .number()
     .positive()
@@ -62,32 +71,29 @@ const CreateProductForm = ({ productId, onSuccess }: ICreateProductProps) => {
       brand: {},
       unit: "litre",
       price: 0,
+      gst: 0,
+      hsn: 0,
     },
     resolver: zodResolver(productSchema),
   });
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     console.log("formValues", data);
+    const payLoad: IProductPayload = {
+      name: data.name,
+      description: data.description || "",
+      unit: data.unit,
+      price: data.price,
+      category: data.category._id,
+      image: "",
+      brand: data.brand._id,
+      hsn: data.hsn as number,
+      gst: data.gst as number,
+    };
     try {
       const response = await (productId
-        ? updateProductById(productId, {
-            name: data.name,
-            description: data.description || "",
-            unit: data.unit,
-            price: data.price,
-            category: data.category._id,
-            image: "",
-            brand: data.brand._id,
-          })
-        : createProduct({
-            name: data.name,
-            description: data.description || "",
-            unit: data.unit,
-            price: data.price,
-            category: data.category._id,
-            image: "",
-            brand: data.brand._id,
-          }));
+        ? updateProductById(productId, payLoad)
+        : createProduct(payLoad));
       console.log("response", response);
       if (response.statusCode === 200) {
         openSnackbar(
@@ -114,6 +120,8 @@ const CreateProductForm = ({ productId, onSuccess }: ICreateProductProps) => {
       setValue("description", response.data.description);
       setValue("unit", response.data.unit);
       setValue("price", response.data.price);
+      setValue("gst", response.data.gst);
+      setValue("hsn", response.data.hsn);
       setValue("category", {
         name: response.data.category.name,
         description: response.data.category.description,
@@ -168,6 +176,22 @@ const CreateProductForm = ({ productId, onSuccess }: ICreateProductProps) => {
                   name={"price"}
                   control={control}
                   label={"Price"}
+                />
+              </Grid>
+              <Grid item md={2} xs={12}>
+                <FormTextField
+                  type="number"
+                  name={"gst"}
+                  control={control}
+                  label={"GST%"}
+                />
+              </Grid>
+              <Grid item md={2} xs={12}>
+                <FormTextField
+                  type="number"
+                  name={"hsn"}
+                  control={control}
+                  label={"HSN Code"}
                 />
               </Grid>
               <Grid item md={3} xs={12}>

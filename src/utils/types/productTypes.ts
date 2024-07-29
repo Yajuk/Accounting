@@ -18,6 +18,8 @@ export interface IProductPayload {
   image: string;
   category: string;
   brand: string;
+  hsn: number;
+  gst: number;
 }
 export interface IProductList {
   currentPage: number;
