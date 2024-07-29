@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
-import CategoryBrandCreate from "../CategoryBrandCreate";
+import CategoryBrandCreate from "./CategoryBrandCreate";
 
 interface IOption {
   name: string;

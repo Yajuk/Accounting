@@ -128,11 +128,7 @@ const SearchFilter: React.FC<{
           setValue={setValue}
           className="mb-2"
         />
-        <Button
-          type="submit"
-          variant="contained"
-          className="bg-blue-500 text-white hover:bg-blue-700 py-2 px-4 rounded-md"
-        >
+        <Button type="submit" variant="contained">
           Apply Filters
         </Button>
         <Button

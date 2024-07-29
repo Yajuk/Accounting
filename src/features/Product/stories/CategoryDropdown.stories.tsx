@@ -23,7 +23,6 @@ const WrapperComponent = ({
 };
 
 const meta = {
-  title: "Components/CategoryBrandDropDown",
   component: WrapperComponent,
   tags: ["autodocs"],
 } satisfies Meta<typeof WrapperComponent>;

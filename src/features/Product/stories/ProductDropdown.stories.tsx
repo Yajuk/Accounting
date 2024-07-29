@@ -1,7 +1,7 @@
 import React from "react";
 import { StoryObj, Meta } from "@storybook/react";
 import { useForm } from "react-hook-form";
-import ProductDropdown from "../ProductDropdown";
+import ProductDropdown from "../ProductDropdown/ProductDropdown";
 
 const WrapperComponent = () => {
   const { control, setValue, handleSubmit } = useForm();
@@ -18,7 +18,6 @@ const WrapperComponent = () => {
 };
 
 const meta = {
-  title: "Components/ProductDropdown",
   component: WrapperComponent,
 } satisfies Meta<typeof WrapperComponent>;
 

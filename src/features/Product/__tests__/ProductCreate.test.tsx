@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { prettyDOM, waitFor } from "@testing-library/dom";
 import { act } from "react-dom/test-utils";
-import CreateProductForm from "../ProductCreate";
+import CreateProductForm from "../ProductDropdown/ProductCreate";
 import { createProduct } from "@/services/product/productService";
 import { getCategories } from "@/services/product/CategoryService";
 import { getBrands } from "@/services/product/brandService";

@@ -1,7 +1,7 @@
 // components/ProductList.tsx
 "use client";
 import DataTable from "@/components/ui/DataTable/DataTable";
-import { Box, Button, Card } from "@mui/material";
+import { Box, Button, Card, Divider } from "@mui/material";
 import {
   GridFilterModel,
   GridRenderCellParams,
@@ -14,7 +14,7 @@ import { columns, styles } from "@/config/productTableConfig";
 import useProducts from "@/hooks/useProducts";
 import { debounce } from "@/utils/debounce";
 import { IPaginationModel, ISearchFilter } from "@/utils/types/productTypes";
-import CreateProductForm from "./ProductCreate";
+import CreateProductForm from "./ProductDropdown/ProductCreate";
 import SearchFilter from "./SearchFilters";
 
 const ProductList = () => {
@@ -64,6 +64,11 @@ const ProductList = () => {
     setCurrentEditRecord(undefined);
     reFetchProducts();
   }, []);
+
+  const handleCloseModal = () => {
+    setCurrentEditRecord(undefined);
+    handleClose();
+  };
   return (
     <Card className="m-4 flex">
       <DataTable
@@ -126,12 +131,20 @@ const ProductList = () => {
         }}
       />
       <Box className="w-[20%] p-4">
-        <Button onClick={handleOpen}>Create Product</Button>
+        <Button
+          variant="contained"
+          sx={{ mb: 2 }}
+          fullWidth
+          onClick={handleOpen}
+        >
+          Create Product
+        </Button>
+        <Divider sx={{ mb: 2 }}>Filters</Divider>
         <SearchFilter onFilterChange={onSearchFilterChange} />
         {open && (
           <MuiModal
             open={open}
-            onClose={handleClose}
+            onClose={handleCloseModal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
