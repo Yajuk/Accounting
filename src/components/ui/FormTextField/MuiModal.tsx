@@ -1,6 +1,6 @@
 "use client";
-import { Modal as MuiModal } from "@mui/material";
-import { useState } from "react";
+import { Modal as MuiModal, Drawer, DrawerProps } from "@mui/material";
+import { Children, useState } from "react";
 
 export const useModal = () => {
   const [open, setOpen] = useState(false);
@@ -10,4 +10,11 @@ export const useModal = () => {
   return { open, handleClose, handleOpen };
 };
 
-export default MuiModal;
+const MuiDrawer = (props: DrawerProps) => {
+  return (
+    <Drawer {...props} anchor={props.anchor ? props.anchor : "top"}>
+      {props.children}
+    </Drawer>
+  );
+};
+export default MuiDrawer;

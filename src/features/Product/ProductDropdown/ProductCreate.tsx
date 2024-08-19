@@ -143,100 +143,98 @@ const CreateProductForm = ({ productId, onSuccess }: ICreateProductProps) => {
 
   console.log("errors", errors);
   return (
-    <>
-      <Card>
-        <CardHeader title="Create Product" />
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
-              <Grid item md={2} xs={12}>
-                <FormTextField
-                  name={"name"}
-                  control={control}
-                  label={"Product Name"}
-                />
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <FormSelect
-                  control={control}
-                  options={[
-                    { value: "kg", label: "kg" },
-                    { value: "gm", label: "gm" },
-                    { value: "litre", label: "litre" },
-                    { value: "ml", label: "ml" },
-                    { value: "piece", label: "piece" },
-                  ]}
-                  name="unit"
-                  label="Unit"
-                />
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <FormTextField
-                  type="number"
-                  name={"price"}
-                  control={control}
-                  label={"Price"}
-                />
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <FormTextField
-                  type="number"
-                  name={"gst"}
-                  control={control}
-                  label={"GST%"}
-                />
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <FormTextField
-                  type="number"
-                  name={"hsn"}
-                  control={control}
-                  label={"HSN Code"}
-                />
-              </Grid>
-              <Grid item md={3} xs={12}>
-                <CategoryDropdown
-                  setValue={setValue}
-                  type="category"
-                  control={control}
-                  name="category"
-                />
-              </Grid>
-              <Grid item md={3} xs={12}>
-                <CategoryDropdown
-                  setValue={setValue}
-                  type="brand"
-                  control={control}
-                  name="brand"
-                />
-              </Grid>
-              <Grid item lg={12} xs={12}>
-                <FormTextField
-                  name={"description"}
-                  control={control}
-                  label={"Description"}
-                  multiline={true}
-                  rows={4}
-                />
-              </Grid>
+    <Card>
+      <CardHeader title="Create Product" />
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid item md={2} xs={12}>
+              <FormTextField
+                name={"name"}
+                control={control}
+                label={"Product Name"}
+              />
             </Grid>
-            <Grid className="flex justify-center mt-4">
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  color="primary"
-                  className="text-white py-2 px-4 my-4 rounded"
-                  size="medium"
-                  data-testId="create-product-button"
-                >
-                  {productId ? "Update" : "Create Product"}
-                </Button>
-              </Grid>
+            <Grid item md={2} xs={12}>
+              <FormSelect
+                control={control}
+                options={[
+                  { value: "kg", label: "kg" },
+                  { value: "gm", label: "gm" },
+                  { value: "litre", label: "litre" },
+                  { value: "ml", label: "ml" },
+                  { value: "piece", label: "piece" },
+                ]}
+                name="unit"
+                label="Unit"
+              />
             </Grid>
-          </form>
-        </CardContent>
-      </Card>
+            <Grid item md={2} xs={12}>
+              <FormTextField
+                type="number"
+                name={"price"}
+                control={control}
+                label={"Price"}
+              />
+            </Grid>
+            <Grid item md={2} xs={12}>
+              <FormTextField
+                type="number"
+                name={"gst"}
+                control={control}
+                label={"GST%"}
+              />
+            </Grid>
+            <Grid item md={2} xs={12}>
+              <FormTextField
+                type="number"
+                name={"hsn"}
+                control={control}
+                label={"HSN Code"}
+              />
+            </Grid>
+            <Grid item md={3} xs={12}>
+              <CategoryDropdown
+                setValue={setValue}
+                type="category"
+                control={control}
+                name="category"
+              />
+            </Grid>
+            <Grid item md={3} xs={12}>
+              <CategoryDropdown
+                setValue={setValue}
+                type="brand"
+                control={control}
+                name="brand"
+              />
+            </Grid>
+            <Grid item lg={12} xs={12}>
+              <FormTextField
+                name={"description"}
+                control={control}
+                label={"Description"}
+                multiline={true}
+                rows={4}
+              />
+            </Grid>
+          </Grid>
+          <Grid className="flex justify-center mt-4">
+            <Grid item md={12}>
+              <Button
+                variant="contained"
+                type="submit"
+                color="primary"
+                className="text-white py-2 px-4 my-4 rounded"
+                size="medium"
+                data-testId="create-product-button"
+              >
+                {productId ? "Update" : "Create Product"}
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </CardContent>
       {open && (
         <CustomSnackbar
           message={snackbarMessage}
@@ -246,7 +244,7 @@ const CreateProductForm = ({ productId, onSuccess }: ICreateProductProps) => {
           action={<Button onClick={handleClose}>Dismiss</Button>}
         />
       )}
-    </>
+    </Card>
   );
 };
 
