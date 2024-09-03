@@ -1,0 +1,11 @@
+services:
+  food-delivery-web:
+    build: .
+    ports:
+      - "4001:4001"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./:/app
+      - /app/node_modules # anonymous volume for node_modules only
+    command: ["npm", "run", "dev"]
