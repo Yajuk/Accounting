@@ -1,15 +1,26 @@
 import { ThemeOptions, createTheme } from "@mui/material/styles";
 
+const mainColor = "#557C93";
+
 export const themeOptions: ThemeOptions = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#006064",
+      main: mainColor,
+      contrastText: "#ffffff", // White text on primary color
     },
     secondary: {
-      main: "#4db6ac",
+      //main: "#ff4081", // A complementary secondary color
+      main: "#0a4c8c",
     },
-    divider: "rgba(185,13,13,0.12)",
+    background: {
+      default: "#f5f5f5", // Softer light background
+      paper: "#ffffff", // Clean white paper background
+    },
+    text: {
+      primary: "#1c1c1c", // Slightly off-black for a softer contrast
+      secondary: "#5f6368", // Muted grey for secondary text
+    },
   },
   spacing: 8,
   typography: {
@@ -34,15 +45,16 @@ export const themeOptions: ThemeOptions = createTheme({
         size: "small", // Adjust font size for labels
       },
     },
-
     MuiInputBase: {
       defaultProps: {
         size: "small", // Adjust font size for inputs
       },
     },
     MuiFormHelperText: {
-      defaultProps: {
-        size: "small", // Adjust font size for helper text
+      styleOverrides: {
+        root: {
+          fontSize: "0.75rem", // Adjust font size for helper text
+        },
       },
     },
   },

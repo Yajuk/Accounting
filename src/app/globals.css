@@ -2,4 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+.login-page-container {
+  background: hsla(213, 77%, 14%, 1);
 
+  background: linear-gradient(
+    90deg,
+    hsla(213, 77%, 14%, 1) 0%,
+    hsla(202, 27%, 45%, 1) 48%
+  );
+
+  background: -moz-linear-gradient(
+    90deg,
+    hsla(213, 77%, 14%, 1) 0%,
+    hsla(202, 27%, 45%, 1) 48%
+  );
+
+  background: -webkit-linear-gradient(
+    90deg,
+    hsla(213, 77%, 14%, 1) 0%,
+    hsla(202, 27%, 45%, 1) 48%
+  );
+
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#08203E", endColorstr="#557C93", GradientType=1 );
+}

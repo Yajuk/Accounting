@@ -42,27 +42,29 @@ interface IFormProps<T extends z.ZodType<any, any>> {
   onSubmit: (data: z.infer<T>) => void;
 }
 
+/**
+ * Generates the default values for the form fields based on the provided `IField` array.
+ *
+ * @param fields - An array of `IField` objects representing the form fields.
+ * @returns An object containing the default values for each form field.
+ */
 const generateDefaultValues = (fields: IField[]) => {
   const defaultValues = fields.reduce(
     (acc, field) => {
-      if (field.field === FieldTypes.TEXT) {
+      const commonTextFields = [
+        FieldTypes.TEXT,
+        FieldTypes.SELECT,
+        FieldTypes.COMBOBOX,
+        FieldTypes.PRODUCT_DD,
+      ];
+
+      const commonObjectFields = [FieldTypes.CATEGORY_DD, FieldTypes.BRAND_DD];
+
+      if (commonTextFields.includes(field.field)) {
         acc[field.name as string] = field.defaultValue || "";
       }
 
-      if (field.field === FieldTypes.SELECT) {
-        acc[field.name as string] = field.defaultValue || "";
-      }
-
-      if (field.field === FieldTypes.COMBOBOX) {
-        acc[field.name as string] = field.defaultValue || "";
-      }
-      if (field.field === FieldTypes.PRODUCT_DD) {
-        acc[field.name as string] = field.defaultValue || "";
-      }
-      if (field.field === FieldTypes.CATEGORY_DD) {
-        acc[field.name as string] = field.defaultValue || {};
-      }
-      if (field.field === FieldTypes.BRAND_DD) {
+      if (commonObjectFields.includes(field.field)) {
         acc[field.name as string] = field.defaultValue || {};
       }
 
@@ -70,6 +72,7 @@ const generateDefaultValues = (fields: IField[]) => {
     },
     {} as Record<string, any>,
   );
+
   console.log("Form Default values", fields, defaultValues);
   return defaultValues;
 };

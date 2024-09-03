@@ -130,7 +130,7 @@ const ProductList = () => {
           expand: true,
         }}
       />
-      <Box className="w-[20%] p-4">
+      <Card className="w-[20%] p-4 m-4 min-w-12">
         <Button
           variant="contained"
           sx={{ mb: 2 }}
@@ -156,7 +156,7 @@ const ProductList = () => {
             </Box>
           </MuiModal>
         )}
-      </Box>
+      </Card>
     </Card>
   );
 };
