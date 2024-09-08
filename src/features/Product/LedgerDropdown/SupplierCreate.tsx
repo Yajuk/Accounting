@@ -56,32 +56,6 @@ const supplierSchema = z.object({
 
 type IFormInput = z.infer<typeof supplierSchema>;
 
-const defaultValuesWithProperData = {
-  name: "Test Supplier",
-  under: "Sundry Creditors",
-  code: "SUP001",
-  contactPerson: "John Doe",
-  phone: "+1234567890",
-  email: "test@example.com",
-  website: "https://www.testsupplier.com",
-  openingBalance: 1000,
-  maintainBalances: true,
-  creditPeriod: 30,
-  checkForCreditDays: true,
-  inventoryValuesAffected: true,
-  address: "123 Test Street, Test City",
-  country: "India",
-  state: "Test State",
-  pinCode: "123456",
-  panItNo: "ABCDE1234F",
-  gstNo: "22AAAAA0000A1Z5",
-  bankName: "Test Bank",
-  bankAccountNo: "1234567890",
-  ifscCode: "TESTB0000001",
-  exciseDetails: true,
-  vatDetails: true,
-};
-
 const SupplierCreationForm = ({
   supplierId,
   onSuccess,
@@ -101,6 +75,7 @@ const SupplierCreationForm = ({
     setValue,
     reset,
     formState: { errors, isValid },
+    watch,
   } = useForm<IFormInput>({
     defaultValues: {
       name: "",
@@ -211,6 +186,10 @@ const SupplierCreationForm = ({
     setTabValue(newValue);
   };
 
+  const under = watch("under");
+
+  console.log("under", under);
+
   return (
     <Card>
       <CardHeader
@@ -218,6 +197,7 @@ const SupplierCreationForm = ({
         sx={{
           bgcolor: theme.palette.primary.main,
           color: theme.palette.primary.contrastText,
+          textAlign: "center",
         }}
       />
       <CardContent>

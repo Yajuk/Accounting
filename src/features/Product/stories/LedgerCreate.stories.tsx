@@ -1,12 +1,12 @@
 import { StoryObj, Meta } from "@storybook/react";
-import SupplierCreate from "../LedgerDropdown/SupplierCreate";
+import LedgerCreate from "../LedgerDropdown/LedgerCreate";
 import { AccountProvider } from "@/context/accountProvider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { StyledEngineProvider } from "@mui/material";
 import ThemeProviderWrapper from "@/components/theme/ThemeProvider";
 
 const meta = {
-  component: SupplierCreate,
+  component: LedgerCreate,
   decorators: [
     (Story) => (
       <AccountProvider>
@@ -20,7 +20,7 @@ const meta = {
       </AccountProvider>
     ),
   ],
-} satisfies Meta<typeof SupplierCreate>;
+} satisfies Meta<typeof LedgerCreate>;
 
 export default meta;
 
