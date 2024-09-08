@@ -3,28 +3,27 @@ import CustomSnackbar, {
   useSnackBar,
 } from "@/components/ui/CustomSnackbar/CustomSnackbar";
 import FormTextField from "@/components/ui/FormTextField/FormTextField";
+import useGroups from "@/hooks/useGroups";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Box,
   Button,
   Card,
   CardContent,
   CardHeader,
-  Grid,
   Checkbox,
   FormControlLabel,
-  Typography,
+  Grid,
   MenuItem,
-  TextField,
-  useTheme,
-  Divider,
-  Tabs,
   Tab,
-  Box,
+  Tabs,
+  TextField,
+  Typography,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import useGroups from "@/hooks/useGroups";
 
 const supplierSchema = z.object({
   name: z
