@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import useGroups from "@/hooks/useGroups";
 
 const supplierSchema = z.object({
   name: z
@@ -89,6 +90,7 @@ const SupplierCreationForm = ({
   onSuccess: () => void;
 }) => {
   const theme = useTheme();
+  const { groupsOptions } = useGroups();
   const { severity, snackbarMessage, open, handleClose, openSnackbar } =
     useSnackBar();
   const [tabValue, setTabValue] = useState(0);
@@ -268,12 +270,13 @@ const SupplierCreationForm = ({
                       size="small"
                       fullWidth
                     >
-                      <MenuItem value="Sundry Creditors">
-                        Sundry Creditors
-                      </MenuItem>
-                      <MenuItem value="Other Ledger Group">
-                        Other Ledger Group
-                      </MenuItem>
+                      {groupsOptions.map(
+                        (option: { value: string; label: string }) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ),
+                      )}
                     </TextField>
                   )}
                 />
