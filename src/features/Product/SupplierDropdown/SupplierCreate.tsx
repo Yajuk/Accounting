@@ -131,7 +131,68 @@ const SupplierCreationForm = ({
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     console.log("Form data:", data);
+    const ledgerPayloadForSupplierOrCustomer = {
+      ledgerName: data.name,
+      groupID: data.under, // Assuming this is the correct group ID for suppliers
+      alias: data.code,
+      inventoryAffected: data.inventoryValuesAffected,
+      billByBill: data.maintainBalances,
+      taxDetails: data.gstNo, // Assuming GST number is used for tax details
+      narration: "", // Add a field for narration if needed
+      contactPerson: data.contactPerson,
+      phone: data.phone,
+      email: data.email,
+      website: data.website,
+      openingBalance: data.openingBalance,
+      maintainBalances: data.maintainBalances,
+      creditPeriod: data.creditPeriod,
+      checkForCreditDays: data.checkForCreditDays,
+      inventoryValuesAffected: data.inventoryValuesAffected,
+      address: data.address,
+      country: data.country,
+      state: data.state,
+      pinCode: data.pinCode,
+      panItNo: data.panItNo,
+      gstNo: data.gstNo,
+      bankName: data.bankName,
+      bankAccountNo: data.bankAccountNo,
+      ifscCode: data.ifscCode,
+      exciseDetails: data.exciseDetails,
+      vatDetails: data.vatDetails,
+    };
+
+    const ledgerPayload = {
+      ledgerName: `${data.name} Purchase Account`,
+      groupID: "Purchase Accounts", // Assuming "Purchase Accounts" is the correct group for purchase accounts
+      alias: `${data.code}_purchase`,
+      inventoryAffected: true,
+      billByBill: false,
+      narration: `Purchase account for supplier ${data.name}`,
+      openingBalance: 0,
+      maintainBalances: false,
+      inventoryValuesAffected: true,
+    };
+
+    console.log(
+      "Ledger payload:",
+      ledgerPayload,
+      ledgerPayloadForSupplierOrCustomer,
+    );
+
     // Submission logic here
+    try {
+      // Replace this with your actual API call to create the ledger
+      // const response = await createLedger(ledgerPayload);
+      // if (response.success) {
+      //   openSnackbar("Supplier created successfully", "success");
+      //   onSuccess();
+      // } else {
+      //   openSnackbar("Failed to create supplier", "error");
+      // }
+    } catch (error) {
+      console.error("Error creating supplier:", error);
+      openSnackbar("An error occurred while creating the supplier", "error");
+    }
   };
 
   const getSupplierDetails = async (id: string) => {
