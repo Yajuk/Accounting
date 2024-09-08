@@ -2,7 +2,7 @@ import ResponsiveAppBar from "@/components/ui/AppBar/Appbar";
 
 const pages = [
   { name: "Product", link: "/product/list" },
-  { name: "Purchase", link: "/product/purchaseProduct" },
+  { name: "Vouchers", link: "/product/vouchers" },
 ];
 const ChatLayout = async ({ children }: any) => {
   return (

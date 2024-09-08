@@ -119,17 +119,17 @@ const ProductDropdown = ({
                   variant="outlined"
                   error={!!error}
                   helperText={error ? error.message : ""}
-                  inputProps={{
-                    ...params.inputProps,
-                    endAdornment: (
-                      <>
-                        {loading ? (
-                          <CircularProgress color="inherit" size={20} />
-                        ) : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
+                  // inputProps={{
+                  //   ...params.inputProps,
+                  //   endAdornment: (
+                  //     <>
+                  //       {loading ? (
+                  //         <CircularProgress color="inherit" size={20} />
+                  //       ) : null}
+                  //       {params.InputProps.endAdornment}
+                  //     </>
+                  //   ),
+                  // }}
                 />
               );
             }}

@@ -36,12 +36,10 @@ function ResponsiveAppBar({ pages }: ResponsiveAppBarProps) {
                     ///color={selectedMenu === i ? "inherit" : "secondary"}
                     sx={{
                       // conditional styling
-                      color: selectedMenu === i ? "white" : "text.secondary",
+                      color: selectedMenu === i ? "white" : "text.primary",
                       fontWeight: selectedMenu === i ? 600 : 500,
                       backgroundColor:
-                        selectedMenu === i
-                          ? "primary.dark"
-                          : "rgba(0, 0, 0, 0.08)",
+                        selectedMenu === i ? "primary.dark" : "transparent",
 
                       padding: "5px 16px",
                       borderRadius: "8px",
