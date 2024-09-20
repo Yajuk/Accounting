@@ -17,7 +17,7 @@ export interface IProps<T> {
   control: any; // Object from useForm hook
   name: string; // Name of the field in the form
   setValue: any; // Function to set the value of the field in the form
-  fetchFunction: () => Promise<T[]>; // Generic function to fetch data (e.g., getCategories, getBrands)
+  fetchFunction: (search: string) => Promise<T[]>; // Generic function to fetch data (e.g., getCategories, getBrands)
   CreateModalComponent: React.ComponentType<{
     onSuccess: () => void;
   }>;

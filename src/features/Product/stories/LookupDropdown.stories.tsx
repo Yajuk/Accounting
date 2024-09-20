@@ -21,8 +21,11 @@ const WrapperComponent = ({ model }: { model: string }) => {
         control={control}
         name="brand"
         setValue={setValue}
-        fetchFunction={async () => {
-          const response = await lookups({ model: model });
+        fetchFunction={async (search: string) => {
+          const response = await lookups({
+            model: model,
+            search: search || "",
+          });
           return response.data;
         }}
         CreateModalComponent={(props) => (

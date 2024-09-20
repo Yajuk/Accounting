@@ -38,7 +38,7 @@ export interface IParams {
 }
 
 export interface ILookupParams {
-  search?: string;
+  search: string;
   model: string;
   page?: number;
   limit?: number;
