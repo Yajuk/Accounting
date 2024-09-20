@@ -23,7 +23,6 @@ export interface IProps<T> {
   }>;
   mapOption: (item: T) => IOption; // Function to map the fetched data to IOption
   className?: string; // Class name to be applied to the component
-  createType?: string; // Type used for creating a new entry (e.g., "category", "brand")
 }
 
 const LookupDropdown = <T,>({
@@ -34,7 +33,6 @@ const LookupDropdown = <T,>({
   fetchFunction,
   mapOption,
   className = "",
-  createType,
   CreateModalComponent,
 }: IProps<T>) => {
   const { options, loading, error, fetchData } = useLookupData(
@@ -106,7 +104,7 @@ const LookupDropdown = <T,>({
                   label={label}
                   variant="outlined"
                   error={!!error}
-                  helperText={error ? error.message : ""}
+                  // helperText={error ? error.message : ""}
                   inputProps={{
                     ...params.inputProps,
                     endAdornment: (

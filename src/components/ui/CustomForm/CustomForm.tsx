@@ -8,6 +8,8 @@ import CategoryDropdown, {
   IProps,
 } from "@/features/Product/CategoryDropdown/CtaegoryDropdown";
 import { Grid, RegularBreakpoints, GridSpacing, Button } from "@mui/material";
+import LookupDropdown from "@/features/Product/LookupDropdown/LookupDropdown";
+import { lookups } from "@/services/product/lookupService";
 
 export const FieldTypes = {
   TEXT: "text",
@@ -16,6 +18,7 @@ export const FieldTypes = {
   PRODUCT_DD: "product-dd",
   CATEGORY_DD: "category-dd",
   BRAND_DD: "brand-dd",
+  LOOKUP: "lookup",
 };
 
 type UIFormFields =
@@ -30,8 +33,15 @@ export type IField = UIFormFields & {
     | "combobox"
     | "product-dd"
     | "category-dd"
-    | "brand-dd";
+    | "brand-dd"
+    | "lookup";
   defaultValue?: any;
+  name: string;
+  model?: string;
+  label: string;
+  CreateComponent?: React.ComponentType<{
+    onSuccess: () => void;
+  }>;
 };
 
 interface IFormProps<T extends z.ZodType<any, any>> {
@@ -96,7 +106,7 @@ const CustomForm = <T extends z.ZodType<any, any>>({
 
   const renderFormField = useCallback(
     (fieldData: IField) => {
-      const { name, label, field } = fieldData;
+      const { name, label, field, model, CreateComponent } = fieldData;
       switch (field) {
         case FieldTypes.TEXT:
           return <FormTextField control={control} name={name} label={label} />;
@@ -129,6 +139,29 @@ const CustomForm = <T extends z.ZodType<any, any>>({
               type="brand"
               control={control}
               name="brand"
+            />
+          );
+
+        case FieldTypes.LOOKUP:
+          const mapOptions = (item: any) => ({
+            name: item.name || item.groupName || item.ledgerName,
+            _id: item._id,
+            description: item.description,
+          });
+          return (
+            <LookupDropdown
+              label={label}
+              control={control}
+              name={name}
+              setValue={setValue}
+              fetchFunction={async () => {
+                const response = await lookups({ model: model as string });
+                return response.data;
+              }}
+              mapOption={mapOptions}
+              CreateModalComponent={(props) =>
+                CreateComponent ? <CreateComponent {...props} /> : null
+              }
             />
           );
         default:

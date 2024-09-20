@@ -10,7 +10,7 @@ const WrapperComponent = ({ model }: { model: string }) => {
   const { control, setValue, handleSubmit, getValues } = useForm();
 
   const mapBrand = (item: any) => ({
-    name: item.name,
+    name: item.name || item.groupName || item.ledgerName,
     _id: item._id,
     description: item.description,
   });
@@ -32,7 +32,6 @@ const WrapperComponent = ({ model }: { model: string }) => {
           return response.data;
         }}
         mapOption={mapBrand}
-        createType="brand"
         CreateModalComponent={(props) => (
           <CategoryBrandCreate type="brand" {...props} />
         )}
