@@ -1,59 +1,59 @@
 import { useState, useEffect, useCallback } from "react";
 
-export interface IOption {
+export interface IOption<T> {
   name: string;
   description?: string;
   _id: string;
+  details: T;
 }
 
 interface IUseLookupData<T> {
-  options: IOption[];
+  options: IOption<T>[];
   loading: boolean;
   error: Error | null;
-  fetchData: (searchTerm: string) => Promise<void>;
+  fetchData: () => Promise<void>;
 }
 
 export function useLookupData<T>(
   fetchFunction: () => Promise<unknown>,
-  mapOption: (item: T) => IOption,
 ): IUseLookupData<T> {
-  const [options, setOptions] = useState<IOption[]>([]);
+  const [options, setOptions] = useState<IOption<T>[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    setError(null); // Clear previous errors
+    setError(null);
 
     try {
-      const data = (await fetchFunction()) as
+      const result = (await fetchFunction()) as
         | { data: T[] }
         | {
             data: {
               data: T[];
             };
           };
-      const dataArray = "data" in data.data ? data.data.data : data.data;
-      if (dataArray.length === 0) {
-        setOptions([]);
-        return;
-      }
-      const mappedOptions = dataArray.map(mapOption);
+      const data = "data" in result ? result.data : result;
+      const dataArray = Array.isArray(data) ? data : data.data || [];
+
+      const mappedOptions = dataArray.map((item: any) => ({
+        name: item.name || item.groupName || item.ledgerName,
+        _id: item._id,
+        description: item.description,
+        details: item,
+      }));
+
       setOptions(mappedOptions);
     } catch (err) {
-      setError(err as Error);
+      setError(err instanceof Error ? err : new Error("An error occurred"));
     } finally {
       setLoading(false);
     }
-  }, [fetchFunction, mapOption]);
+  }, [fetchFunction]);
+
   useEffect(() => {
-    fetchData(); // Fetch data when the hook is initialized
+    fetchData();
   }, [fetchData]);
 
-  return {
-    options,
-    loading,
-    error,
-    fetchData,
-  };
+  return { options, loading, error, fetchData };
 }

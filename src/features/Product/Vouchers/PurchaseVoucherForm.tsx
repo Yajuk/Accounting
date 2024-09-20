@@ -39,6 +39,7 @@ const purchaseVoucherSchema = z.object({
           description: z.string().nonempty("Item description is required"),
           name: z.string().nonempty("Item name is required"),
           _id: z.string().nonempty("Item ID is required"),
+          details: z.any(),
         })
         .optional(),
       quantity: z.coerce.number().min(1, "Quantity must be at least 1"),

@@ -143,11 +143,6 @@ const CustomForm = <T extends z.ZodType<any, any>>({
           );
 
         case FieldTypes.LOOKUP:
-          const mapOptions = (item: any) => ({
-            name: item.name || item.groupName || item.ledgerName,
-            _id: item._id,
-            description: item.description,
-          });
           return (
             <LookupDropdown
               label={label}
@@ -158,7 +153,6 @@ const CustomForm = <T extends z.ZodType<any, any>>({
                 const response = await lookups({ model: model as string });
                 return response.data;
               }}
-              mapOption={mapOptions}
               CreateModalComponent={(props) =>
                 CreateComponent ? <CreateComponent {...props} /> : null
               }

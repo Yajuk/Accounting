@@ -21,28 +21,22 @@ export interface IProps<T> {
   CreateModalComponent: React.ComponentType<{
     onSuccess: () => void;
   }>;
-  mapOption: (item: T) => IOption; // Function to map the fetched data to IOption
   className?: string; // Class name to be applied to the component
 }
-
 const LookupDropdown = <T,>({
   label,
   control,
   name,
   setValue,
   fetchFunction,
-  mapOption,
   className = "",
   CreateModalComponent,
 }: IProps<T>) => {
-  const { options, loading, error, fetchData } = useLookupData(
-    fetchFunction,
-    mapOption,
-  );
+  const { options, loading, error, fetchData } = useLookupData(fetchFunction);
 
   const { open, handleOpen, handleClose } = useModal();
 
-  const onSelectOption = (data: IOption | null) => {
+  const onSelectOption = (data: IOption<T> | null) => {
     if (data?.name === `Create ${label}`) {
       setValue(name, null); // Clear form value
       return;
@@ -165,7 +159,6 @@ const mapBrand = (item: any) => ({
   name="brand"
   setValue={form.setValue}
   fetchFunction={getBrands}
-  mapOption={mapBrand}
   createType="brand"
   CreateModalComponent={(props) => (
     <CategoryBrandCreate type="brand" {...props} />

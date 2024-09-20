@@ -33,6 +33,7 @@ const schema = z.object({
     name: z.string(),
     description: z.string().optional(),
     _id: z.string(),
+    details: z.any(),
   }),
 });
 export const CustomFormDefault: Story = {

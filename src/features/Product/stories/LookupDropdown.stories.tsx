@@ -9,12 +9,6 @@ import { Button } from "@mui/material";
 const WrapperComponent = ({ model }: { model: string }) => {
   const { control, setValue, handleSubmit, getValues } = useForm();
 
-  const mapBrand = (item: any) => ({
-    name: item.name || item.groupName || item.ledgerName,
-    _id: item._id,
-    description: item.description,
-  });
-
   const onSubmit = (data: any) => {
     console.log(data);
   };
@@ -31,7 +25,6 @@ const WrapperComponent = ({ model }: { model: string }) => {
           const response = await lookups({ model: model });
           return response.data;
         }}
-        mapOption={mapBrand}
         CreateModalComponent={(props) => (
           <CategoryBrandCreate type="brand" {...props} />
         )}
