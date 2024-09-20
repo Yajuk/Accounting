@@ -102,13 +102,11 @@ const PurchaseVoucherForm = () => {
     setValue("totalGST", totalGST);
     setValue("cgst", totalGST / 2);
     setValue("sgst", totalGST / 2);
-  }, [watchItems, setValue]);
+  }, [JSON.stringify(watchItems), setValue]);
 
   const onSubmit = (data: any) => {
     console.log("Submitted data:", data);
   };
-
-  console.log(fields);
 
   return (
     <Box
