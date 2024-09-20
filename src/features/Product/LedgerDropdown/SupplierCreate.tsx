@@ -35,11 +35,11 @@ const supplierSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email().optional(),
   website: z.string().optional(),
-  openingBalance: z.number().optional(),
+  openingBalance: z.coerce.number().optional(),
   maintainBalances: z.boolean(),
-  creditPeriod: z.number().optional(),
+  creditPeriod: z.coerce.number().optional(),
   checkForCreditDays: z.boolean(),
-  inventoryValuesAffected: z.boolean(),
+  inventoryValuesAffected: z.coerce.boolean(),
   address: z.string().optional(),
   country: z.string().optional(),
   state: z.string().optional(),
@@ -52,7 +52,6 @@ const supplierSchema = z.object({
   exciseDetails: z.boolean(),
   vatDetails: z.boolean(),
 });
-
 type IFormInput = z.infer<typeof supplierSchema>;
 
 const SupplierCreationForm = ({
