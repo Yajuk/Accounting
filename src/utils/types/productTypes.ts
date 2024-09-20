@@ -36,3 +36,10 @@ export interface IParams {
   page?: number;
   limit?: number;
 }
+
+export interface ILookupParams {
+  search?: string;
+  model: string;
+  page?: number;
+  limit?: number;
+}

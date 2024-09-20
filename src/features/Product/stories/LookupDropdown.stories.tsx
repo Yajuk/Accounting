@@ -3,10 +3,10 @@ import { StoryObj, Meta } from "@storybook/react";
 import { useForm } from "react-hook-form";
 import LookupDropdown from "../LookupDropdown/LookupDropdown";
 import CategoryBrandCreate from "../CategoryDropdown/CategoryBrandCreate";
-import { getBrands } from "@/services/product/brandService";
+import { lookups } from "@/services/product/lookupService";
 import { Button } from "@mui/material";
 
-const WrapperComponent = () => {
+const WrapperComponent = ({ model }: { model: string }) => {
   const { control, setValue, handleSubmit, getValues } = useForm();
 
   const mapBrand = (item: any) => ({
@@ -27,7 +27,10 @@ const WrapperComponent = () => {
         control={control}
         name="brand"
         setValue={setValue}
-        fetchFunction={getBrands}
+        fetchFunction={async () => {
+          const response = await lookups({ model: model });
+          return response.data;
+        }}
         mapOption={mapBrand}
         createType="brand"
         CreateModalComponent={(props) => (
@@ -49,6 +52,6 @@ type Story = StoryObj<typeof meta>;
 
 export const BrandDropdownDefaultLookup: Story = {
   args: {
-    type: "brand",
+    model: "brand",
   },
 };
