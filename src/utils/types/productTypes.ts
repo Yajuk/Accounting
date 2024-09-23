@@ -42,4 +42,5 @@ export interface ILookupParams {
   model: string;
   page?: number;
   limit?: number;
+  searchColumns?: string[];
 }

@@ -26,11 +26,17 @@ import { z } from "zod";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import ProductDropdown from "../ProductDropdown/ProductDropdown"; // Import the ProductDropdown component
+import LookupDropdown from "../LookupDropdown/LookupDropdown";
+import { lookups } from "@/services/product/lookupService";
+import SupplierCreationForm from "../LedgerDropdown/SupplierCreate";
 
 // Zod schema
 const purchaseVoucherSchema = z.object({
   date: z.string().nonempty("Date is required"),
-  supplier: z.string().nonempty("Supplier is required"),
+  supplier: z.object({
+    name: z.string().nonempty("Supplier name is required"),
+    _id: z.string().nonempty("Supplier ID is required"),
+  }),
   invoiceNumber: z.union([z.string(), z.number()]),
   items: z.array(
     z.object({
@@ -144,20 +150,24 @@ const PurchaseVoucherForm = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Controller
-                  name="supplier"
+                <LookupDropdown
+                  label="Supplier"
                   control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="Supplier"
-                      fullWidth
-                      size="small"
-                      error={!!errors.supplier}
-                      helperText={
-                        errors.supplier ? errors.supplier.message : ""
-                      }
-                    />
+                  name="supplier"
+                  setValue={setValue}
+                  fetchFunction={async (search: string) => {
+                    const response = await lookups({
+                      model: "Ledger",
+                      search: search || "",
+                      searchColumns: ["ledgerName"],
+                    });
+                    return response.data.data.filter(
+                      (item: any) =>
+                        item.groupID.groupName === "Sundry Creditors",
+                    );
+                  }}
+                  CreateModalComponent={(props) => (
+                    <SupplierCreationForm {...props} />
                   )}
                 />
               </Grid>
