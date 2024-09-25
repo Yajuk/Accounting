@@ -22,11 +22,15 @@ const useGroups = () => {
     }
   };
 
+  const getGroup = (groupName: string) => {
+    return groupsOptions.find((group) => group.label === groupName);
+  };
+
   useEffect(() => {
     getGroups();
   }, []);
 
-  return { groupsOptions, getGroups };
+  return { groupsOptions, getGroups, getGroup };
 };
 
 export default useGroups;

@@ -29,6 +29,8 @@ import ProductDropdown from "../ProductDropdown/ProductDropdown"; // Import the 
 import LookupDropdown from "../LookupDropdown/LookupDropdown";
 import { lookups } from "@/services/product/lookupService";
 import SupplierCreationForm from "../LedgerDropdown/SupplierCreate";
+import useVoucher from "@/hooks/useVouchers";
+import useLedger from "@/hooks/useLedgers";
 
 // Zod schema
 const purchaseVoucherSchema = z.object({
@@ -63,6 +65,9 @@ const purchaseVoucherSchema = z.object({
 });
 
 const PurchaseVoucherForm = () => {
+  const { getNextVoucherNumber } = useVoucher();
+  const { getLedger } = useLedger();
+  const ledger = getLedger("Purchase");
   const {
     control,
     register,
@@ -110,8 +115,51 @@ const PurchaseVoucherForm = () => {
     setValue("sgst", totalGST / 2);
   }, [JSON.stringify(watchItems), setValue]);
 
-  const onSubmit = (data: any) => {
-    console.log("Submitted data:", data);
+  const onSubmit = async (data: any) => {
+    const voucherNumber = await getNextVoucherNumber({ type: "Purchase" });
+    console.log("Submitted data:", data, voucherNumber);
+    if (!ledger) {
+      console.error("Ledger not found");
+      return;
+    }
+
+    const totalAmount = data.applyGST
+      ? data.totalAmount + data.totalGST
+      : data.totalAmount;
+    const payload = {
+      voucherNumber: voucherNumber,
+      voucherDate: data.date,
+      voucherType: "Purchase",
+      payeeOrPayer: data.supplier._id,
+      amount: totalAmount,
+      paymentMethod: "Credit", // Assuming Cash as default, you might want to add this field to your form
+      items: data.items.map((item: any) => ({
+        itemName: item.itemName.name,
+        quantity: item.quantity,
+        rate: item.rate,
+        amount:
+          item.quantity * item.rate +
+            (applyGST ? (item.quantity * item.rate * item.gst) / 100 : 0) || 0,
+        batch: item.batch || "", // Assuming batch is not in your current form, you might want to add it
+        expiryDate: item.expiryDate || new Date().toISOString(), // Assuming expiryDate is not in your current form, you might want to add it
+      })),
+      ledgerEntries: [
+        {
+          ledger: ledger.value,
+          amount: totalAmount,
+          drOrCr: "D",
+        },
+        {
+          ledger: data.supplier._id, // You might want to dynamically set this based on the supplier
+          amount: totalAmount,
+          drOrCr: "C",
+        },
+      ],
+      description:
+        data.description || `Purchase of products from ${data.supplier}`, // Assuming description is not in your current form, you might want to add it
+    };
+
+    console.log("Submitted Payload:", payload);
   };
 
   return (

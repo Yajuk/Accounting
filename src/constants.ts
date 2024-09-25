@@ -25,3 +25,4 @@ export const ChatEventEnum = Object.freeze({
 });
 
 export const AvailableChatEvents = Object.values(ChatEventEnum);
+export const NATURES = ["Assets", "Liabilities", "Income", "Expenses"];
