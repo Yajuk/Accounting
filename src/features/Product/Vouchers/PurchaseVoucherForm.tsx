@@ -73,7 +73,7 @@ const purchaseVoucherSchema = z.object({
 const PurchaseVoucherForm = () => {
   const { getNextVoucherNumber } = useVoucher();
   const { getLedger } = useLedger();
-  const ledger = getLedger("Purchase");
+  const ledger = getLedger("Purchase A/c");
   const {
     control,
     register,
