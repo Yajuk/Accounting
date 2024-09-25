@@ -1,40 +1,36 @@
 "use client";
-import React from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import useLedger from "@/hooks/useLedgers";
+import useVoucher from "@/hooks/useVouchers";
+import { lookups } from "@/services/product/lookupService";
 import { zodResolver } from "@hookform/resolvers/zod";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  TextField,
-  Button,
-  Grid,
   Box,
+  Button,
   Card,
   CardContent,
-  Typography,
-  IconButton,
   Divider,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Paper,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  Switch,
-  FormControlLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
-  FormControl,
+  TextField,
+  Typography,
 } from "@mui/material";
+import React from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import ProductDropdown from "../ProductDropdown/ProductDropdown"; // Import the ProductDropdown component
-import LookupDropdown from "../LookupDropdown/LookupDropdown";
-import { lookups } from "@/services/product/lookupService";
 import SupplierCreationForm from "../LedgerDropdown/SupplierCreate";
-import useVoucher from "@/hooks/useVouchers";
-import useLedger from "@/hooks/useLedgers";
+import LookupDropdown from "../LookupDropdown/LookupDropdown";
+import ProductDropdown from "../ProductDropdown/ProductDropdown"; // Import the ProductDropdown component
 import BatchSelect from "./BatchSelect";
 
 // Zod schema
@@ -186,7 +182,7 @@ const PurchaseVoucherForm = () => {
       <Typography variant="h5" gutterBottom align="center" color="primary">
         Purchase Voucher
       </Typography>
-      <Card elevation={0} sx={{ width: "85%" }}>
+      <Card elevation={0} sx={{ width: "95%" }}>
         <CardContent>
           <form
             onSubmit={handleSubmit(onSubmit)}
