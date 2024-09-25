@@ -21,6 +21,10 @@ import {
   Paper,
   Switch,
   FormControlLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
+  FormControl,
 } from "@mui/material";
 import { z } from "zod";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -31,6 +35,7 @@ import { lookups } from "@/services/product/lookupService";
 import SupplierCreationForm from "../LedgerDropdown/SupplierCreate";
 import useVoucher from "@/hooks/useVouchers";
 import useLedger from "@/hooks/useLedgers";
+import BatchSelect from "./BatchSelect";
 
 // Zod schema
 const purchaseVoucherSchema = z.object({
@@ -55,6 +60,7 @@ const purchaseVoucherSchema = z.object({
       gst: z.coerce.number().min(0, "GST must be 0 or greater"),
       amount: z.number().optional(),
       gstAmount: z.number().optional(),
+      batch: z.string().min(1, "Batch is required"),
     }),
   ),
   totalAmount: z.number(),
@@ -78,11 +84,19 @@ const PurchaseVoucherForm = () => {
   } = useForm({
     resolver: zodResolver(purchaseVoucherSchema),
     defaultValues: {
-      date: "",
+      date: new Date().toISOString().split("T")[0],
       supplier: "",
-      invoiceNumber: "",
+      invoiceNumber: "INV-10001" || "",
       items: [
-        { itemName: "", quantity: 1, rate: 0, gst: 0, amount: 0, gstAmount: 0 },
+        {
+          itemName: "",
+          quantity: 1,
+          rate: 0,
+          gst: 18 || 0,
+          amount: 0,
+          gstAmount: 0,
+          batch: "",
+        },
       ],
       totalAmount: 0,
       totalGST: 0,
@@ -256,6 +270,7 @@ const PurchaseVoucherForm = () => {
                         <TableCell align="right">GST %</TableCell>
                         <TableCell align="right">Amount</TableCell>
                         <TableCell align="right">GST Amount</TableCell>
+                        <TableCell align="right">Batch</TableCell>
                         <TableCell align="right">Action</TableCell>
                       </TableRow>
                     </TableHead>
@@ -355,6 +370,21 @@ const PurchaseVoucherForm = () => {
                                 readOnly: true,
                               }}
                             />
+                          </TableCell>
+                          <TableCell align="right">
+                            {watchItems[index]?.itemName && (
+                              <BatchSelect
+                                control={control}
+                                name={`items.${index}.batch`}
+                                index={index}
+                                batches={
+                                  watchItems[index]?.itemName?.batches || []
+                                }
+                                error={
+                                  errors.items?.[index]?.batch?.message || ""
+                                }
+                              />
+                            )}
                           </TableCell>
                           <TableCell align="right">
                             <IconButton
