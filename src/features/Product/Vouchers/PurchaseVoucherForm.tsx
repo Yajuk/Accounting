@@ -32,6 +32,7 @@ import SupplierCreationForm from "../LedgerDropdown/SupplierCreate";
 import LookupDropdown from "../LookupDropdown/LookupDropdown";
 import ProductDropdown from "../ProductDropdown/ProductDropdown"; // Import the ProductDropdown component
 import BatchSelect from "./BatchSelect";
+import PrintableBill from "./PrintBill";
 
 // Zod schema
 const purchaseVoucherSchema = z.object({
@@ -70,6 +71,7 @@ const PurchaseVoucherForm = () => {
   const { getNextVoucherNumber } = useVoucher();
   const { getLedger } = useLedger();
   const ledger = getLedger("Purchase A/c");
+  const [submittedData, setSubmittedData] = React.useState(null);
   const {
     control,
     register,
@@ -170,7 +172,19 @@ const PurchaseVoucherForm = () => {
     };
 
     console.log("Submitted Payload:", payload);
+    setSubmittedData(data);
   };
+
+  if (submittedData) {
+    return (
+      <PrintableBill
+        data={submittedData}
+        onPrint={() => {
+          window.print();
+        }}
+      />
+    );
+  }
 
   return (
     <Box
