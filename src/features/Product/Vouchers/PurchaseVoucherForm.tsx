@@ -33,6 +33,8 @@ import LookupDropdown from "../LookupDropdown/LookupDropdown";
 import ProductDropdown from "../ProductDropdown/ProductDropdown"; // Import the ProductDropdown component
 import BatchSelect from "./BatchSelect";
 import PrintableBill from "./PrintBill";
+import { IPurchaseVoucher } from "@/utils/types/voucherTypes";
+import { createVoucher } from "@/services/product/voucherService";
 
 // Zod schema
 const purchaseVoucherSchema = z.object({
@@ -138,17 +140,23 @@ const PurchaseVoucherForm = () => {
     const totalAmount = data.applyGST
       ? data.totalAmount + data.totalGST
       : data.totalAmount;
-    const payload = {
+    const payload: IPurchaseVoucher = {
       voucherNumber: voucherNumber,
+      invoiceNumber: data.invoiceNumber,
       voucherDate: data.date,
       voucherType: "Purchase",
       payeeOrPayer: data.supplier._id,
       amount: totalAmount,
+      totalGST: data.totalGST,
+      cgst: data.cgst,
+      sgst: data.sgst,
+
       paymentMethod: "Credit", // Assuming Cash as default, you might want to add this field to your form
       items: data.items.map((item: any) => ({
         itemName: item.itemName.name,
         quantity: item.quantity,
         rate: item.rate,
+        gst: item.gst,
         amount:
           item.quantity * item.rate +
             (applyGST ? (item.quantity * item.rate * item.gst) / 100 : 0) || 0,
@@ -171,20 +179,26 @@ const PurchaseVoucherForm = () => {
         data.description || `Purchase of products from ${data.supplier}`, // Assuming description is not in your current form, you might want to add it
     };
 
-    console.log("Submitted Payload:", payload);
+    try {
+      const response = await createVoucher(payload);
+      console.log("Voucher created successfully:", response.data);
+    } catch (error) {
+      console.error("Error creating voucher:", error);
+    }
+
     setSubmittedData(data);
   };
 
-  if (submittedData) {
-    return (
-      <PrintableBill
-        data={submittedData}
-        onPrint={() => {
-          window.print();
-        }}
-      />
-    );
-  }
+  // if (submittedData) {
+  //   return (
+  //     <PrintableBill
+  //       data={submittedData}
+  //       onPrint={() => {
+  //         window.print();
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <Box

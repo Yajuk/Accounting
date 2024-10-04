@@ -1,4 +1,4 @@
-interface IVoucherNumberPayload {
+export interface IVoucherNumberPayload {
   type:
     | "Contra"
     | "Payment"
@@ -23,4 +23,32 @@ interface IVoucherNumberPayload {
     | "Credit Note"
     | "Reversing Journal";
   voucherNumber?: number;
+}
+
+export interface IPurchaseVoucher {
+  voucherNumber: string;
+  invoiceNumber: string;
+  voucherDate: string;
+  voucherType: "Purchase";
+  payeeOrPayer: string;
+  amount: number;
+  totalGST: number;
+  cgst: number;
+  sgst: number;
+  paymentMethod: string;
+  items: Array<{
+    itemName: string;
+    quantity: number;
+    rate: number;
+    gst: number;
+    amount: number;
+    batch: string;
+    expiryDate: string;
+  }>;
+  ledgerEntries: Array<{
+    ledger: string;
+    amount: number;
+    drOrCr: "D" | "C";
+  }>;
+  description: string;
 }
