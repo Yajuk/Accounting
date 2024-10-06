@@ -80,61 +80,66 @@ const ProductDropdown = ({
       <Controller
         name={name}
         control={control}
-        render={({ field, fieldState: { error } }) => (
-          <Autocomplete
-            {...field}
-            className={className}
-            options={[{ name: "Create product" }, ...options]}
-            loading={loading}
-            getOptionLabel={(option) => option?.name || ""}
-            onChange={(_, value) => onSelectOption(value)}
-            onInputChange={(event, value, reason) => {
-              console.log(event, value, reason);
-              // write debounc search
-              if (reason === "input") {
-                onSearchProduct(value);
+        render={({ field, fieldState: { error } }) => {
+          console.log(field, error);
+          return (
+            <Autocomplete
+              {...field}
+              className={className}
+              options={[{ name: "Create product" }, ...options]}
+              loading={loading}
+              getOptionLabel={(option) => option?.name || ""}
+              onChange={(_, value) => onSelectOption(value)}
+              onInputChange={(event, value, reason) => {
+                console.log(event, value, reason);
+                // write debounc search
+                if (reason === "input") {
+                  onSearchProduct(value);
+                }
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option?._id === value?._id
               }
-            }}
-            isOptionEqualToValue={(option, value) => option?._id === value?._id}
-            renderOption={(props, option) =>
-              option?.name === "Create product" ? (
-                <Button
-                  color="primary"
-                  size="small"
-                  fullWidth
-                  onClick={handleOpen}
-                >
-                  <AddCircle className="mr-2" />
-                  Create New
-                </Button>
-              ) : (
-                <li {...props}>{option?.name}</li>
-              )
-            }
-            renderInput={(params) => {
-              return (
-                <TextField
-                  {...params}
-                  label={"Products"}
-                  variant="outlined"
-                  error={!!error}
-                  helperText={error ? error.message : ""}
-                  // inputProps={{
-                  //   ...params.inputProps,
-                  //   endAdornment: (
-                  //     <>
-                  //       {loading ? (
-                  //         <CircularProgress color="inherit" size={20} />
-                  //       ) : null}
-                  //       {params.InputProps.endAdornment}
-                  //     </>
-                  //   ),
-                  // }}
-                />
-              );
-            }}
-          />
-        )}
+              renderOption={(props, option) =>
+                option?.name === "Create product" ? (
+                  <Button
+                    color="primary"
+                    size="small"
+                    fullWidth
+                    onClick={handleOpen}
+                  >
+                    <AddCircle className="mr-2" />
+                    Create New
+                  </Button>
+                ) : (
+                  <li {...props}>{option?.name}</li>
+                )
+              }
+              renderInput={(params) => {
+                return (
+                  <TextField
+                    {...params}
+                    label={"Products"}
+                    variant="outlined"
+                    error={!!error}
+                    helperText={error ? error.message : ""}
+                    // inputProps={{
+                    //   ...params.inputProps,
+                    //   endAdornment: (
+                    //     <>
+                    //       {loading ? (
+                    //         <CircularProgress color="inherit" size={20} />
+                    //       ) : null}
+                    //       {params.InputProps.endAdornment}
+                    //     </>
+                    //   ),
+                    // }}
+                  />
+                );
+              }}
+            />
+          );
+        }}
       />
       <MuiModal
         open={open}

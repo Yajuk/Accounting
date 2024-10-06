@@ -25,7 +25,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import SupplierCreationForm from "../LedgerDropdown/SupplierCreate";
@@ -35,6 +35,7 @@ import BatchSelect from "./BatchSelect";
 import PrintableBill from "./PrintBill";
 import { IPurchaseVoucher } from "@/utils/types/voucherTypes";
 import { createVoucher } from "@/services/product/voucherService";
+import { set } from "mongoose";
 
 // Zod schema
 const purchaseVoucherSchema = z.object({
@@ -53,6 +54,7 @@ const purchaseVoucherSchema = z.object({
           _id: z.string().nonempty("Item ID is required"),
           details: z.any(),
         })
+        .or(z.string())
         .optional(),
       quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
       rate: z.coerce.number().min(0.01, "Rate must be greater than 0"),
@@ -69,8 +71,12 @@ const purchaseVoucherSchema = z.object({
   applyGST: z.boolean(),
 });
 
-const PurchaseVoucherForm = () => {
-  const { getNextVoucherNumber } = useVoucher();
+interface IPurchaseVoucherFormProps {
+  id?: string;
+}
+const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
+  const { getNextVoucherNumber, getVoucherById } = useVoucher();
+  const [voucherNumber, setVoucherNumber] = React.useState("");
   const { getLedger } = useLedger();
   const ledger = getLedger("Purchase A/c");
   const [submittedData, setSubmittedData] = React.useState(null);
@@ -78,6 +84,7 @@ const PurchaseVoucherForm = () => {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
     watch,
     setValue,
@@ -128,6 +135,38 @@ const PurchaseVoucherForm = () => {
     setValue("cgst", totalGST / 2);
     setValue("sgst", totalGST / 2);
   }, [JSON.stringify(watchItems), setValue]);
+
+  useEffect(() => {
+    if (id) {
+      getVoucherById(id).then((data) => {
+        debugger;
+        const formData = {
+          date: data.voucherDate.split("T")[0],
+          supplier: {
+            name: data.payeeOrPayer.ledgerName,
+            _id: data.payeeOrPayer,
+          },
+          invoiceNumber: data.invoiceNumber,
+          items: data.items.map((item: any) => ({
+            itemName: item.details,
+            quantity: item.quantity,
+            rate: item.rate,
+            gst: item.gst,
+            amount: item.amount,
+            gstAmount: item.gstAmount,
+            batch: item.batch,
+          })),
+          totalAmount: data.amount,
+          totalGST: data.totalGST,
+          cgst: data.cgst,
+          sgst: data.sgst,
+          applyGST: data.applyGST,
+        };
+        setVoucherNumber(data.voucherNumber);
+        reset(formData);
+      });
+    }
+  }, [id]);
 
   const onSubmit = async (data: any) => {
     const voucherNumber = await getNextVoucherNumber({ type: "Purchase" });
@@ -208,7 +247,7 @@ const PurchaseVoucherForm = () => {
       className="flex flex-col items-center justify-center"
     >
       <Typography variant="h5" gutterBottom align="center" color="primary">
-        Purchase Voucher
+        Purchase Voucher {voucherNumber ? voucherNumber : null}
       </Typography>
       <Card elevation={0} sx={{ width: "95%" }}>
         <CardContent>
@@ -299,129 +338,132 @@ const PurchaseVoucherForm = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {fields.map((field, index) => (
-                        <TableRow key={index + "items"}>
-                          <TableCell width={300}>
-                            <ProductDropdown
-                              control={control}
-                              name={`items.${index}.itemName`}
-                              setValue={setValue}
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <Controller
-                              name={`items.${index}.quantity`}
-                              control={control}
-                              render={({ field }) => (
-                                <TextField
-                                  {...field}
-                                  type="number"
-                                  size="small"
-                                  error={!!errors.items?.[index]?.quantity}
-                                  helperText={
-                                    errors.items?.[index]?.quantity?.message ||
-                                    ""
-                                  }
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
-                                  }
-                                />
-                              )}
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <Controller
-                              name={`items.${index}.rate`}
-                              control={control}
-                              render={({ field }) => (
-                                <TextField
-                                  {...field}
-                                  type="number"
-                                  size="small"
-                                  error={!!errors.items?.[index]?.rate}
-                                  helperText={
-                                    errors.items?.[index]?.rate?.message || ""
-                                  }
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
-                                  }
-                                />
-                              )}
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <Controller
-                              name={`items.${index}.gst`}
-                              control={control}
-                              render={({ field }) => (
-                                <TextField
-                                  {...field}
-                                  type="number"
-                                  size="small"
-                                  error={!!errors.items?.[index]?.gst}
-                                  helperText={
-                                    errors.items?.[index]?.gst?.message || ""
-                                  }
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
-                                  }
-                                />
-                              )}
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <TextField
-                              size="small"
-                              value={
-                                watchItems[index].quantity *
-                                  watchItems[index].rate || 0
-                              }
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <TextField
-                              size="small"
-                              value={
-                                (watchItems[index].quantity *
-                                  watchItems[index].rate *
-                                  watchItems[index].gst) /
-                                  100 || 0
-                              }
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            {watchItems[index]?.itemName && (
-                              <BatchSelect
+                      {fields.map((field, index) => {
+                        console.log("field", watchItems[index]?.itemName);
+                        return (
+                          <TableRow key={index + "items"}>
+                            <TableCell width={300}>
+                              <ProductDropdown
                                 control={control}
-                                name={`items.${index}.batch`}
-                                index={index}
-                                batches={
-                                  watchItems[index]?.itemName?.batches || []
-                                }
-                                error={
-                                  errors.items?.[index]?.batch?.message || ""
-                                }
+                                name={`items.${index}.itemName`}
+                                setValue={setValue}
                               />
-                            )}
-                          </TableCell>
-                          <TableCell align="right">
-                            <IconButton
-                              onClick={() => remove(index)}
-                              color="secondary"
-                              aria-label="remove item"
-                              size="small"
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                            </TableCell>
+                            <TableCell align="right">
+                              <Controller
+                                name={`items.${index}.quantity`}
+                                control={control}
+                                render={({ field }) => (
+                                  <TextField
+                                    {...field}
+                                    type="number"
+                                    size="small"
+                                    error={!!errors.items?.[index]?.quantity}
+                                    helperText={
+                                      errors.items?.[index]?.quantity
+                                        ?.message || ""
+                                    }
+                                    onChange={(e) =>
+                                      field.onChange(Number(e.target.value))
+                                    }
+                                  />
+                                )}
+                              />
+                            </TableCell>
+                            <TableCell align="right">
+                              <Controller
+                                name={`items.${index}.rate`}
+                                control={control}
+                                render={({ field }) => (
+                                  <TextField
+                                    {...field}
+                                    type="number"
+                                    size="small"
+                                    error={!!errors.items?.[index]?.rate}
+                                    helperText={
+                                      errors.items?.[index]?.rate?.message || ""
+                                    }
+                                    onChange={(e) =>
+                                      field.onChange(Number(e.target.value))
+                                    }
+                                  />
+                                )}
+                              />
+                            </TableCell>
+                            <TableCell align="right">
+                              <Controller
+                                name={`items.${index}.gst`}
+                                control={control}
+                                render={({ field }) => (
+                                  <TextField
+                                    {...field}
+                                    type="number"
+                                    size="small"
+                                    error={!!errors.items?.[index]?.gst}
+                                    helperText={
+                                      errors.items?.[index]?.gst?.message || ""
+                                    }
+                                    onChange={(e) =>
+                                      field.onChange(Number(e.target.value))
+                                    }
+                                  />
+                                )}
+                              />
+                            </TableCell>
+                            <TableCell align="right">
+                              <TextField
+                                size="small"
+                                value={
+                                  watchItems[index].quantity *
+                                    watchItems[index].rate || 0
+                                }
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell align="right">
+                              <TextField
+                                size="small"
+                                value={
+                                  (watchItems[index].quantity *
+                                    watchItems[index].rate *
+                                    watchItems[index].gst) /
+                                    100 || 0
+                                }
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell align="right">
+                              {watchItems[index]?.itemName && (
+                                <BatchSelect
+                                  control={control}
+                                  name={`items.${index}.batch`}
+                                  index={index}
+                                  batches={
+                                    watchItems[index]?.itemName?.batches || []
+                                  }
+                                  error={
+                                    errors.items?.[index]?.batch?.message || ""
+                                  }
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell align="right">
+                              <IconButton
+                                onClick={() => remove(index)}
+                                color="secondary"
+                                aria-label="remove item"
+                                size="small"
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </TableContainer>

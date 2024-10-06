@@ -1,3 +1,4 @@
+import * as voucherService from "./../services/product/voucherService";
 import { useState, useCallback, useEffect } from "react";
 import {
   nextVoucherNumber,
@@ -34,8 +35,21 @@ const useVoucher = () => {
     }
     return null;
   };
+  const getVoucherById = async (id: string): Promise<any | null> => {
+    try {
+      const response = await voucherService.getVoucherById(id);
+      if (response.statusCode === 200) {
+        const voucher = response.data;
+        return voucher;
+      }
+    } catch (error) {
+      console.error("Error fetching voucher:", error);
+    }
+    return null;
+  };
   return {
     getNextVoucherNumber,
+    getVoucherById,
   };
 };
 export default useVoucher;

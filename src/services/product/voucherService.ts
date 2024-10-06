@@ -61,3 +61,16 @@ export const getVouchers = async (params?: IParams) => {
     throw error;
   }
 };
+
+export const getVoucherById = async (id: string) => {
+  console.log("id", id);
+  try {
+    const response: SuccessResponse<any> = await apiClient({
+      url: `/vouchers/${id}`,
+      method: "GET",
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

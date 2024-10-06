@@ -28,7 +28,7 @@ const BatchSelect: React.FC<BatchSelectProps> = ({
   error,
 }) => {
   const [newBatch, setNewBatch] = useState(""); // Track new batch input
-  const [batchList, setBatchList] = useState(batches); // Local state for batches
+
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
 
   // Handle form submission to add new batch
@@ -54,7 +54,7 @@ const BatchSelect: React.FC<BatchSelectProps> = ({
           <FormControl fullWidth error={!!error}>
             <Select {...field} size="small" displayEmpty>
               <MenuItem value="">None</MenuItem>
-              {batchList.map((batch, idx) => (
+              {batches.map((batch, idx) => (
                 <MenuItem key={idx} value={batch.batchNo}>
                   {batch.batchNo}
                 </MenuItem>
