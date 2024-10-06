@@ -1,4 +1,5 @@
 import PurchaseVoucherForm from "@/features/Product/Vouchers/PurchaseVoucherForm";
+import VoucherList from "@/features/Product/Vouchers/VoucherList";
 interface Props {
   params: {
     vType:
@@ -25,7 +26,7 @@ const RenderVouchers = ({ params: { vType } }: Props) => {
     // case "CreditNote":
     //   return <CreditNote />;
     default:
-      return <div>No Voucher</div>;
+      return <VoucherList />;
   }
 };
 

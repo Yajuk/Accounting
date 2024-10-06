@@ -1,4 +1,9 @@
-import { nextVoucherNumber } from "@/services/product/voucherService";
+import { useState, useCallback, useEffect } from "react";
+import {
+  nextVoucherNumber,
+  getVouchers,
+} from "@/services/product/voucherService";
+import { IPaginationModel } from "@/utils/types/productTypes";
 
 type VoucherType =
   | "Contra"
@@ -34,3 +39,46 @@ const useVoucher = () => {
   };
 };
 export default useVoucher;
+
+export const useVouchersList = (
+  paginationModel: IPaginationModel,
+  search: string,
+) => {
+  const [vouchers, setVouchers] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getVouchersList = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const resp = await getVouchers({
+        page: paginationModel.page + 1,
+        limit: paginationModel.pageSize,
+        search: search || "",
+        searchColumns: ["invoiceNumber", "voucherNumber"],
+        //search: search || searchFilters?.search,
+        // startDate: searchFilters?.startDate,
+        // endDate: searchFilters?.endDate,
+      });
+
+      if (resp.statusCode === 200) {
+        setVouchers(resp.data.data);
+        setTotalCount(resp.data.totalCount);
+      } else {
+        console.error(`Error fetching Vouchers: ${resp.statusCode}`);
+      }
+    } catch (error) {
+      console.error("Error fetching Vouchers:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [paginationModel, search]);
+
+  const reFetchVouchers = () => {
+    getVouchersList();
+  };
+  useEffect(() => {
+    getVouchersList();
+  }, [getVouchersList]);
+  return { vouchers, totalCount, isLoading, reFetchVouchers };
+};

@@ -15,7 +15,7 @@ const ChatLayout = async ({ children }: any) => {
       <div className="w-2/12 border-r-2">
         <ResponsiveAppBar pages={pages} />
       </div>
-      <main className="w-full bg-gradient-to-r from-gray-100 to-blue-100">
+      <main className="w-10/12 bg-gradient-to-r from-gray-100 to-blue-100">
         {children}
       </main>
     </div>
