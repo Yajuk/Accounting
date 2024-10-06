@@ -7,6 +7,7 @@ import {
   GridToolbar,
 } from "@mui/x-data-grid";
 import { useCallback, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 
 import { useModal } from "@/components/ui/FormTextField/MuiModal";
 import { columns, styles } from "@/config/voucherTableConfig";
@@ -78,16 +79,20 @@ const VoucherList = () => {
             renderCell: (params: GridRenderCellParams) => {
               return (
                 <Box>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      setCurrentEditRecord(params.row);
-                      handleOpen();
-                    }}
+                  <Link
+                    href={`/product/vouchers/types/Purchase/${params.row._id}`}
                   >
-                    Edit
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        setCurrentEditRecord(params.row);
+                        handleOpen();
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  </Link>
                 </Box>
               );
             },

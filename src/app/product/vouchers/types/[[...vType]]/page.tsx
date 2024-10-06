@@ -12,9 +12,9 @@ interface Props {
   };
 }
 const RenderVouchers = ({ params: { vType } }: Props) => {
-  switch (vType) {
+  switch (vType[0]) {
     case "Purchase":
-      return <PurchaseVoucherForm id="670262548fd128194ccbf18a" />;
+      return <PurchaseVoucherForm id={vType[1]} />;
     // case "Sales":
     //   return <SalesOrder />;
     // case "Payment":
