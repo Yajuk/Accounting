@@ -375,6 +375,7 @@ const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
                                 control={control}
                                 name={`items.${index}.itemName`}
                                 setValue={setValue}
+                                defaultValue={watchItems[index]?.itemName}
                               />
                             </TableCell>
                             <TableCell align="right">

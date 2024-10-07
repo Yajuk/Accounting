@@ -11,7 +11,7 @@ import {
   CircularProgress,
   TextField,
 } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MuiModal from "@/components/ui/FormTextField/MuiModal";
 import CreateProductForm from "./ProductCreate";
 
@@ -26,12 +26,14 @@ interface IProps {
   name: string; // Name of the field in the form
   setValue: any; // Function to set the value of the field in the form
   className?: string; // Class name to be applied to the component
+  defaultValue?: any; // Default value of the field in the form
 }
 
 const ProductDropdown = ({
   control,
   name,
   setValue,
+  defaultValue = null,
   className = "",
 }: IProps) => {
   const [options, setOptions] = useState<IOption[]>([]);
@@ -75,11 +77,18 @@ const ProductDropdown = ({
     fetchData(searchTerm);
   }, []);
 
+  useEffect(() => {
+    if (defaultValue && !options.find((o) => o._id === defaultValue._id)) {
+      setOptions([...options, defaultValue]);
+    }
+  }, [defaultValue]);
+
   return (
     <>
       <Controller
         name={name}
         control={control}
+        //defaultValue={defaultValue || null} // Directly set defaultValue here
         render={({ field, fieldState: { error } }) => {
           console.log(field, error);
           return (
