@@ -2,6 +2,7 @@
 import useLedger from "@/hooks/useLedgers";
 import useVoucher from "@/hooks/useVouchers";
 import { lookups } from "@/services/product/lookupService";
+import { IPurchaseVoucher } from "@/utils/types/voucherTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -22,10 +23,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  tableRowClasses,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import SupplierCreationForm from "../LedgerDropdown/SupplierCreate";
@@ -33,9 +35,7 @@ import LookupDropdown from "../LookupDropdown/LookupDropdown";
 import ProductDropdown from "../ProductDropdown/ProductDropdown"; // Import the ProductDropdown component
 import BatchSelect from "./BatchSelect";
 import PrintableBill from "./PrintBill";
-import { IPurchaseVoucher } from "@/utils/types/voucherTypes";
 import { createVoucher } from "@/services/product/voucherService";
-import { set } from "mongoose";
 
 // Zod schema
 const purchaseVoucherSchema = z.object({
@@ -80,6 +80,8 @@ const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
   const { getLedger } = useLedger();
   const ledger = getLedger("Purchase A/c");
   const [submittedData, setSubmittedData] = React.useState(null);
+  const previousItem = useRef("");
+
   const {
     control,
     register,
@@ -88,6 +90,7 @@ const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
     formState: { errors },
     watch,
     setValue,
+    getValues,
   } = useForm({
     resolver: zodResolver(purchaseVoucherSchema),
     defaultValues: {
@@ -121,7 +124,32 @@ const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
   const watchItems = watch("items");
   const applyGST = watch("applyGST");
 
-  React.useEffect(() => {
+  const setBatchValue = useCallback(() => {
+    const { unsubscribe } = watch((value, { name }) => {
+      if (name?.includes("itemName")) {
+        const index = parseInt(name.split(".")[1], 10);
+        const currentItemName = value.items?.[index]?.itemName?.name;
+
+        if (
+          currentItemName !== undefined &&
+          currentItemName !== previousItem.current
+        ) {
+          const batchKey = name.replace("itemName", "batch");
+          setValue(batchKey, "");
+          previousItem.current = currentItemName;
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [watch, setValue]);
+
+  useEffect(() => {
+    const unsubscribe = setBatchValue();
+    return unsubscribe;
+  }, [setBatchValue]);
+
+  useEffect(() => {
     const totalAmount = watchItems.reduce(
       (acc, item) => acc + (item.quantity * item.rate || 0),
       0,
@@ -134,17 +162,16 @@ const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
     setValue("totalGST", totalGST);
     setValue("cgst", totalGST / 2);
     setValue("sgst", totalGST / 2);
-  }, [JSON.stringify(watchItems), setValue]);
+  }, [JSON.stringify(watchItems), setValue, watch]);
 
   useEffect(() => {
     if (id) {
       getVoucherById(id).then((data) => {
-        debugger;
         const formData = {
           date: data.voucherDate.split("T")[0],
           supplier: {
             name: data.payeeOrPayer.ledgerName,
-            _id: data.payeeOrPayer,
+            _id: data.payeeOrPayer._id,
           },
           invoiceNumber: data.invoiceNumber,
           items: data.items.map((item: any) => ({
@@ -219,13 +246,14 @@ const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
     };
 
     try {
+      throw new Error("This is a test error");
       const response = await createVoucher(payload);
       console.log("Voucher created successfully:", response.data);
     } catch (error) {
       console.error("Error creating voucher:", error);
     }
 
-    setSubmittedData(data);
+    // setSubmittedData(data);
   };
 
   // if (submittedData) {
@@ -561,7 +589,7 @@ const PurchaseVoucherForm = ({ id }: IPurchaseVoucherFormProps) => {
                   fullWidth
                   size="small"
                 >
-                  Submit Purchase Voucher
+                  {id ? "Update Voucher" : "Submit Purchase Voucher"}
                 </Button>
               </Grid>
             </Grid>
