@@ -43,6 +43,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 }));
 
 const ProductDetails = ({ product }: any) => {
+  debugger;
   return (
     <Box className="container mx-auto p-2" sx={{ maxWidth: "900px" }}>
       <StyledCard>

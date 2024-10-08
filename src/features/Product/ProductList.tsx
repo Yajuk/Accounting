@@ -25,10 +25,14 @@ import { IPaginationModel, ISearchFilter } from "@/utils/types/productTypes";
 import CreateProductForm from "./ProductDropdown/ProductCreate";
 import SearchFilter from "./SearchFilters";
 import ProductDetails from "./ProductDropdown/ProductDetails";
+import GenericTable from "@/components/ui/GenericTable/GenericTable";
 
 const ProductList = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const [paginationModel, setPaginationModel] = useState<IPaginationModel>({
     page: 0,
@@ -96,6 +100,28 @@ const ProductList = () => {
     handleOpen();
   };
 
+  const handlePageChange = (newPage) => {
+    console.log("New page:", newPage);
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (newRowsPerPage) => {
+    console.log("New rows per page:", newRowsPerPage);
+    setRowsPerPage(newRowsPerPage);
+    setPage(0);
+  };
+
+  const renderDetailPanel = (row) => <ProductDetails product={row} />;
+
+  const handleRowClick = (row) => {
+    console.log("Row clicked:", row);
+    // Handle row click
+  };
+  const handleSelectionChange = (selectedIds: string[]) => {
+    console.log("Selected IDs:", selectedIds);
+    // Handle selection change
+  };
+
   return (
     <Box className="m-4 flex flex-col lg:flex-row gap-4">
       <Card className="flex-grow">
@@ -103,7 +129,48 @@ const ProductList = () => {
           <Typography variant="h5" className="mb-4">
             Product List
           </Typography>
-          <DataTable
+          <GenericTable
+            columns={[
+              ...columns,
+              {
+                key: "actions",
+                label: "Actions",
+                width: 200,
+                render: (value, row: Record<string, any>) => (
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleEditClick(row)}
+                      size="small"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleDetailsClick(row)}
+                      size="small"
+                    >
+                      Details
+                    </Button>
+                  </Box>
+                ),
+              },
+            ]}
+            data={products}
+            totalCount={totalCount}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            loading={isLoading}
+            onRowClick={handleRowClick}
+            onSelectionChange={handleSelectionChange}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            renderDetailPanel={renderDetailPanel}
+            showEditAction={false}
+          />
+          {/* <DataTable
             sx={styles}
             getRowId={(row) => row._id}
             columns={[
@@ -165,7 +232,7 @@ const ProductList = () => {
               outliersFactor: 1,
               expand: true,
             }}
-          />
+          /> */}
         </Box>
       </Card>
       <Card className={`${isMobile ? "w-full" : "w-[300px]"} p-4`}>
