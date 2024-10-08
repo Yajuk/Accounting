@@ -1,7 +1,15 @@
 // components/ProductList.tsx
 "use client";
 import DataTable from "@/components/ui/DataTable/DataTable";
-import { Box, Button, Card, Divider } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  Divider,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import {
   GridFilterModel,
   GridRenderCellParams,
@@ -16,8 +24,12 @@ import { debounce } from "@/utils/debounce";
 import { IPaginationModel, ISearchFilter } from "@/utils/types/productTypes";
 import CreateProductForm from "./ProductDropdown/ProductCreate";
 import SearchFilter from "./SearchFilters";
+import ProductDetails from "./ProductDropdown/ProductDetails";
 
 const ProductList = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [paginationModel, setPaginationModel] = useState<IPaginationModel>({
     page: 0,
     pageSize: 10,
@@ -34,6 +46,7 @@ const ProductList = () => {
   const [currentEditRecord, setCurrentEditRecord] = useState<
     Record<string, any> | undefined
   >(undefined);
+  const [showDetails, setShowDetails] = useState(false);
   const rowCountRef = useRef<number>(totalCount || 0);
   const rowCount = useMemo<number>(() => {
     if (totalCount !== undefined) {
@@ -67,70 +80,95 @@ const ProductList = () => {
 
   const handleCloseModal = () => {
     setCurrentEditRecord(undefined);
+    setShowDetails(false);
     handleClose();
   };
+
+  const handleEditClick = (row: Record<string, any>) => {
+    setCurrentEditRecord(row);
+    setShowDetails(false);
+    handleOpen();
+  };
+
+  const handleDetailsClick = (row: Record<string, any>) => {
+    setCurrentEditRecord(row);
+    setShowDetails(true);
+    handleOpen();
+  };
+
   return (
-    <Card className="m-4 flex">
-      <DataTable
-        sx={styles}
-        getRowId={(row) => row._id}
-        columns={[
-          ...columns,
-          {
-            field: "actions",
-            headerName: "Actions",
-            renderCell: (params: GridRenderCellParams) => {
-              return (
-                <Box>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      setCurrentEditRecord(params.row);
-                      handleOpen();
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </Box>
-              );
-            },
-          },
-        ]}
-        rows={products}
-        rowCount={rowCount}
-        loading={isLoading}
-        filterMode="server"
-        pageSizeOptions={[10, 20, 50]}
-        paginationModel={paginationModel}
-        paginationMode="server"
-        onPaginationModelChange={setPaginationModel}
-        disableColumnFilter
-        disableColumnSelector
-        disableDensitySelector
-        slots={{ toolbar: GridToolbar }}
-        density="compact"
-        disableColumnSorting
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-            quickFilterProps: {
-              debounceMs: 300,
-            },
-            showExport: false,
-          },
-        }}
-        onFilterModelChange={onFilterChange}
-        autosizeOnMount
-        autoHeight
-        autosizeOptions={{
-          includeOutliers: true,
-          includeHeaders: true,
-          outliersFactor: 1,
-          expand: true,
-        }}
-      />
-      <Card className="w-[20%] p-4 m-4 min-w-12">
+    <Box className="m-4 flex flex-col lg:flex-row gap-4">
+      <Card className="flex-grow">
+        <Box className="p-4">
+          <Typography variant="h5" className="mb-4">
+            Product List
+          </Typography>
+          <DataTable
+            sx={styles}
+            getRowId={(row) => row._id}
+            columns={[
+              ...columns,
+              {
+                field: "actions",
+                headerName: "Actions",
+                width: 200,
+                renderCell: (params: GridRenderCellParams) => (
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleEditClick(params.row)}
+                      size="small"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleDetailsClick(params.row)}
+                      size="small"
+                    >
+                      Details
+                    </Button>
+                  </Box>
+                ),
+              },
+            ]}
+            rows={products}
+            rowCount={rowCount}
+            loading={isLoading}
+            filterMode="server"
+            pageSizeOptions={[10, 20, 50]}
+            paginationModel={paginationModel}
+            paginationMode="server"
+            onPaginationModelChange={setPaginationModel}
+            disableColumnFilter
+            disableColumnSelector
+            disableDensitySelector
+            slots={{ toolbar: GridToolbar }}
+            density="compact"
+            disableColumnSorting
+            slotProps={{
+              toolbar: {
+                showQuickFilter: true,
+                quickFilterProps: { debounceMs: 300 },
+                csvOptions: { disableToolbarButton: true },
+                printOptions: { disableToolbarButton: true },
+              },
+            }}
+            onFilterModelChange={onFilterChange}
+            autosizeOnMount
+            autoHeight
+            autosizeOptions={{
+              includeOutliers: true,
+              includeHeaders: true,
+              outliersFactor: 1,
+              expand: true,
+            }}
+          />
+        </Box>
+      </Card>
+      <Card className={`${isMobile ? "w-full" : "w-[300px]"} p-4`}>
         <Button
           variant="contained"
           sx={{ mb: 2 }}
@@ -141,23 +179,26 @@ const ProductList = () => {
         </Button>
         <Divider sx={{ mb: 2 }}>Filters</Divider>
         <SearchFilter onFilterChange={onSearchFilterChange} />
-        {open && (
-          <MuiModal
-            open={open}
-            onClose={handleCloseModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box>
-              <CreateProductForm
-                productId={currentEditRecord?._id}
-                onSuccess={onSuccess}
-              />
-            </Box>
-          </MuiModal>
-        )}
       </Card>
-    </Card>
+      <MuiModal
+        open={open}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box>
+          {!showDetails && (
+            <CreateProductForm
+              productId={currentEditRecord?._id}
+              onSuccess={onSuccess}
+            />
+          )}
+          {showDetails && currentEditRecord && (
+            <ProductDetails product={currentEditRecord} />
+          )}
+        </Box>
+      </MuiModal>
+    </Box>
   );
 };
 

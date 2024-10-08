@@ -4,6 +4,9 @@ import { GridColDef } from "@mui/x-data-grid";
 export const columns: GridColDef[] = [
   // { field: "_id", headerName: "ID", width: 120, type: "string" },
   { field: "name", headerName: "Name", width: 150, type: "string" },
+  { field: "quantity", headerName: "Quantity", width: 100, type: "number" },
+  { field: "unit", headerName: "Unit", width: 50, type: "string" },
+  { field: "price", headerName: "MRP", width: 100, type: "number" },
   {
     field: "brand",
     headerName: "Brand",
@@ -26,7 +29,6 @@ export const columns: GridColDef[] = [
     headerName: "Description",
     type: "string",
   },
-  { field: "price", headerName: "MRP", width: 100, type: "number" },
   {
     field: "createdAt",
     headerName: "Created At",
