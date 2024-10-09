@@ -1,6 +1,6 @@
 // components/ProductTableConfig.ts
 import { GridColDef } from "@mui/x-data-grid";
-import { Column } from "@/components/ui/GenericTable";
+import { Column } from "@/components/ui/GenericTable/GenericTable";
 
 export const columns2: GridColDef[] = [
   // { field: "_id", headerName: "ID", width: 120, type: "string" },
@@ -56,6 +56,7 @@ export const columns: Column<any>[] = [
     width: 100,
     sortable: true,
     filterable: false,
+    //sticky: "left",
   },
   { key: "unit", label: "Unit", width: 50, sortable: true, filterable: false },
   { key: "price", label: "MRP", width: 100, sortable: true, filterable: false },
@@ -82,7 +83,7 @@ export const columns: Column<any>[] = [
   {
     key: "description",
     label: "Description",
-    width: 200,
+    width: 150,
     sortable: true,
     filterable: false,
   },
@@ -102,6 +103,7 @@ export const columns: Column<any>[] = [
     width: 150,
     sortable: true,
     filterable: false,
+
     render: (value) => {
       return new Date(value).toLocaleDateString();
     },

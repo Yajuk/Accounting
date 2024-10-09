@@ -135,6 +135,8 @@ const ProductList = () => {
               {
                 key: "actions",
                 label: "Actions",
+                sticky: "right",
+                filterable: false,
                 width: 200,
                 render: (value, row: Record<string, any>) => (
                   <Box sx={{ display: "flex", gap: 1 }}>

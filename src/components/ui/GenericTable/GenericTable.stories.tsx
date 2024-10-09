@@ -24,6 +24,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const Template: Story = {
+  args: {
+    columns: [],
+    data: [],
+    totalCount: 0,
+    page: 0,
+    rowsPerPage: 10,
+    onPageChange: () => {},
+    onRowsPerPageChange: () => {},
+  },
   render: (args) => {
     const [data, setData] = useState(args.data);
     const [totalCount, setTotalCount] = useState(args.totalCount);
@@ -52,7 +61,6 @@ const Template: Story = {
     );
   },
 };
-
 export const BasicTable: Story = {
   ...Template,
   args: {

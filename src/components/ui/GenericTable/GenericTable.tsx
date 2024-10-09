@@ -54,6 +54,7 @@ export interface Column<T> {
   width?: number;
   sortable?: boolean;
   filterable?: boolean;
+  sticky?: "left" | "right";
 }
 
 export interface TableData {
@@ -190,13 +191,47 @@ const GenericTable = <T extends TableData>({
     );
   };
 
+  const stickyStyle = (
+    column: Column<any>,
+    index: number,
+    columns: Column<any>[],
+  ): React.CSSProperties => {
+    const leftStickyColumns = columns.filter((col) => col.sticky === "left");
+    const rightStickyColumns = columns.filter((col) => col.sticky === "right");
+
+    const stickyLeft =
+      column.sticky === "left"
+        ? `${leftStickyColumns
+            .slice(
+              0,
+              leftStickyColumns.findIndex((col) => col.key === column.key),
+            )
+            .reduce((sum, col) => sum + (col.width || 0), 0)}px`
+        : "auto";
+
+    const stickyRight =
+      column.sticky === "right"
+        ? `${rightStickyColumns.slice(rightStickyColumns.findIndex((col) => col.key === column.key) + 1).reduce((sum, col) => sum + (col.width || 0), 0)}px`
+        : "auto";
+
+    return {
+      position: "sticky",
+      background: "#fff",
+      zIndex: 1,
+      left: stickyLeft,
+      right: stickyRight,
+      minWidth: column.width,
+      boxShadow: column.sticky ? "0 2px 2px -1px rgba(0, 0, 0, 0.1)" : "none",
+    };
+  };
+
   return (
     <Box sx={{ width: "100%", overflowX: "auto" }}>
       {loading && <LinearProgress />}
       <TableContainer>
         <Table stickyHeader aria-label="sticky table" size="small">
           <TableHead>
-            <TableRow>
+            <TableRow hover className="relative">
               {renderDetailPanel && <TableCell />}
               <TableCell padding="checkbox">
                 <Checkbox
@@ -211,10 +246,10 @@ const GenericTable = <T extends TableData>({
                   onChange={handleSelectAllClick}
                 />
               </TableCell>
-              {columns.map((column) => (
+              {columns.map((column, index) => (
                 <TableCell
                   key={String(column.key)}
-                  style={{ width: column.width }}
+                  style={stickyStyle(column, index, columns)}
                 >
                   {column.sortable !== false && (
                     <TableSortLabel
@@ -244,15 +279,15 @@ const GenericTable = <T extends TableData>({
             {filteredData.map((row) => (
               <React.Fragment key={row._id}>
                 <TableRow
-                  hover
                   onClick={() => onRowClick?.(row)}
                   role="checkbox"
                   aria-checked={selectedRows.includes(row._id)}
                   tabIndex={-1}
                   selected={selectedRows.includes(row._id)}
+                  className="relative"
                 >
                   {renderDetailPanel && (
-                    <TableCell>
+                    <TableCell className="border-b-0">
                       <IconButton
                         aria-label="expand row"
                         size="small"
@@ -266,21 +301,25 @@ const GenericTable = <T extends TableData>({
                       </IconButton>
                     </TableCell>
                   )}
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" className="border-b-0">
                     <Checkbox
                       checked={selectedRows.includes(row._id)}
                       onChange={() => handleRowSelect(row._id)}
                     />
                   </TableCell>
-                  {columns.map((column) => (
-                    <TableCell key={String(column.key)}>
+                  {columns.map((column, index) => (
+                    <TableCell
+                      key={String(column.key)}
+                      style={stickyStyle(column, index, columns)}
+                      className="border-b-0"
+                    >
                       {column.render
                         ? column.render(row[column.key], row)
                         : row[column.key]}
                     </TableCell>
                   ))}
                   {showEditAction && (
-                    <TableCell>
+                    <TableCell className="border-b-0">
                       <IconButton onClick={() => onRowEdit?.(row._id)}>
                         <Edit />
                       </IconButton>
